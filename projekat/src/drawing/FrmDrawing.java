@@ -12,6 +12,7 @@ import javax.swing.JButton;
 
 import geometry.Circle;
 import geometry.Donut;
+import geometry.Hexagon;
 import geometry.Line;
 import geometry.Point;
 import geometry.Rectangle;
@@ -345,7 +346,16 @@ public class FrmDrawing extends JFrame {
 						pnlDrawing.setShape(index, dlgCircle.getCircle());
 						pnlDrawing.repaint();
 					}
-				} 
+				} else if (shape instanceof Hexagon) {
+					DlgHexagon dlgHexagon = new DlgHexagon();
+					dlgHexagon.setHexagon((Hexagon)shape);
+					dlgHexagon.setVisible(true);
+					
+					if(dlgHexagon.getHexagon() != null) {
+						pnlDrawing.setShape(index, dlgHexagon.getHexagon());
+						pnlDrawing.repaint();
+					}
+				}
 			}
 		};
 	}
@@ -372,6 +382,7 @@ public class FrmDrawing extends JFrame {
 		btnShapeRectangle.setEnabled(true);
 		btnShapeCircle.setEnabled(true);
 		btnShapeDonut.setEnabled(true);
+		btnHexagon.setEnabled(true);
 		
 		btnColorEdge.setEnabled(true);
 		btnColorInner.setEnabled(true);
@@ -388,6 +399,7 @@ public class FrmDrawing extends JFrame {
 		btnShapeRectangle.setEnabled(false);
 		btnShapeCircle.setEnabled(false);
 		btnShapeDonut.setEnabled(false);
+		btnHexagon.setEnabled(false);
 		
 		btnColorEdge.setEnabled(false);
 		btnColorInner.setEnabled(false);
