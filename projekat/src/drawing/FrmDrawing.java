@@ -23,12 +23,15 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.JToggleButton;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.JScrollPane;
+import javax.swing.JList;
 
 public class FrmDrawing extends JFrame {
 	private final int OPERATION_DRAWING = 1;
@@ -37,8 +40,6 @@ public class FrmDrawing extends JFrame {
 	private int activeOperation = OPERATION_DRAWING;
 	
 	private PnlDrawing pnlDrawing = new PnlDrawing();
-	private JToggleButton btnOperationDrawing = new JToggleButton("Draw");
-	private JToggleButton btnOperationEditOrDelete = new JToggleButton("Select");
 	private JButton btnActionEdit = new JButton("Edit");
 	private JButton btnActionDelete = new JButton("Delete");
 	private JToggleButton btnShapePoint = new JToggleButton("Point");
@@ -53,15 +54,25 @@ public class FrmDrawing extends JFrame {
 	boolean lineWaitingForEndPoint = false;
 	private Point startPoint;
 	
+	
 	private JPanel contentPane;
 	private  ButtonGroup btnsOperation = new ButtonGroup();
 	private  ButtonGroup btnsShapes = new ButtonGroup();
 	private  JButton btnRedo = new JButton("Redo");
 	private  JButton btnUndo = new JButton("Undo");
 
-	private ArrayList<Command> commands = new ArrayList<Command>();
-	private int currentCommand = -1;
+	
+	
 	private JToggleButton btnHexagon = new JToggleButton("Hexagon");
+	
+	private DrawingController drawingcontroller = new DrawingController(pnlDrawing, this);
+	private final JPanel panel = new JPanel();
+	private final JToggleButton btnOperationDrawing = new JToggleButton("Draw");
+	private final JToggleButton btnOperationEditOrDelete = new JToggleButton("Select");
+	private final JScrollPane scrollPane = new JScrollPane();
+	private final JList list = new JList();
+	
+	private DefaultListModel<String> defaultListModel = new DefaultListModel<>();
 	
 	/**
 	 * Launch the application.
@@ -109,24 +120,21 @@ public class FrmDrawing extends JFrame {
 		
 		btnRedo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(currentCommand + 1 <= commands.size() - 1) {
-					currentCommand++;
-					commands.get(currentCommand).Do();	
-				}
-				
+				drawingcontroller.redo();
 			}
 		});
 		
 		btnUndo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				if(currentCommand - 1 >= -1) {
-					commands.get(currentCommand).Undo();
-					currentCommand--;	
-				}
+				drawingcontroller.undo();
+
 				
 			}
 		});
+		
+		btnsOperation.add(btnOperationDrawing);
+		btnsOperation.add(btnOperationEditOrDelete);
+		
 		
 		pnlNorth.add(btnRedo);
 		
@@ -134,24 +142,7 @@ public class FrmDrawing extends JFrame {
 		
 		JPanel pnlSouth = new JPanel();
 		contentPane.add(pnlSouth, BorderLayout.SOUTH);
-		
-		btnOperationDrawing.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setOperationDrawing();
-			}
-		});
-		
-		
-		btnsOperation.add(btnOperationDrawing);
-		pnlSouth.add(btnOperationDrawing);
-		
-		btnOperationEditOrDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setOperationEditDelete();
-			}
-		});
-		btnsOperation.add(btnOperationEditOrDelete);
-		pnlSouth.add(btnOperationEditOrDelete);
+		pnlSouth.setLayout(new BorderLayout(0, 0));
 		
 		JPanel pnlWest = new JPanel();
 		contentPane.add(pnlWest, BorderLayout.WEST);
@@ -175,15 +166,26 @@ public class FrmDrawing extends JFrame {
 		btnsShapes.add(btnShapeDonut);
 		pnlWest.add(btnShapeDonut);
 		
+		pnlSouth.add(panel, BorderLayout.NORTH);
 		btnOperationDrawing.setSelected(true);
+		
+		panel.add(btnOperationDrawing);
+		
+		panel.add(btnOperationEditOrDelete);
+		
+		pnlSouth.add(scrollPane, BorderLayout.SOUTH);
+		scrollPane.setViewportView(list);
+		list.setModel(defaultListModel);
+		
 		setOperationDrawing();
 	}
+	
 	
 	private MouseAdapter pnlDrawingClickListener() {
 		return new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Point mouseClick = new Point(e.getX(), e.getY());
+				Point mouseClick = drawingcontroller.makeMouseClick(e.getX(), e.getY());
 				pnlDrawing.deselect();
 				
 				if (activeOperation == OPERATION_EDIT_DELETE) {
@@ -191,102 +193,25 @@ public class FrmDrawing extends JFrame {
 					return;
 				}
 				
-				
 				if (btnShapePoint.isSelected()) {
-					DlgPoint dlgPoint = new DlgPoint();
-					dlgPoint.setPoint(mouseClick);
-					dlgPoint.setColors(edgeColor);
-					dlgPoint.setVisible(true);
-					if(dlgPoint.getPoint() != null) {
-						AddCommand addCommand = new AddCommand(dlgPoint.getPoint(), pnlDrawing);
-						commands.add(addCommand);
-						currentCommand++;
-						addCommand.Do();
-						return;
-					}
-					
-					
+					drawingcontroller.drawPoint(mouseClick);
 				}
 				
 				else if(btnHexagon.isSelected()) {
-					DlgHexagon dlgHexagon = new DlgHexagon();
-					dlgHexagon.setPoint(mouseClick);
-					dlgHexagon.setColors(edgeColor, innerColor);
-					dlgHexagon.setVisible(true);
-					if(dlgHexagon.getHexagon() != null) {
-							AddCommand addCommand = new AddCommand(dlgHexagon.getHexagon(), pnlDrawing);
-							commands.add(addCommand);
-							currentCommand++;
-							addCommand.Do();
-							return;
-						
-					}
+					drawingcontroller.drawHexagon(mouseClick);
 				}
 				
 				else if (btnShapeLine.isSelected()) {
-					if(lineWaitingForEndPoint) {
-						
-						DlgLine dlgLine = new DlgLine();
-						Line line = new Line(startPoint,mouseClick);
-						dlgLine.setLine(line);
-						dlgLine.setColors(edgeColor);
-						dlgLine.setVisible(true);
-						if(dlgLine.getLine()!= null) {
-							AddCommand addCommand = new AddCommand(dlgLine.getLine(), pnlDrawing);
-							commands.add(addCommand);
-							currentCommand++;
-							addCommand.Do();
-							lineWaitingForEndPoint=false;
-							return;
-						}					
-					}
-					startPoint = mouseClick;
-					lineWaitingForEndPoint=true;
-					return;
-					
+					drawingcontroller.drawLine(mouseClick);
 		
 				} else if (btnShapeRectangle.isSelected()) {
-					DlgRectangle dlgRectangle = new DlgRectangle();
-					dlgRectangle.setPoint(mouseClick);
-					dlgRectangle.setColors(edgeColor, innerColor);
-					dlgRectangle.setVisible(true);
-					
-					if(dlgRectangle.getRectangle() != null) {
-						AddCommand addCommand = new AddCommand(dlgRectangle.getRectangle(), pnlDrawing);
-						commands.add(addCommand);
-						currentCommand++;
-						addCommand.Do();
-						return;
-					}
+					drawingcontroller.drawRectangle(mouseClick);
 					
 				} else if (btnShapeCircle.isSelected()) {
-					DlgCircle dlgCircle = new DlgCircle();
-					dlgCircle.setPoint(mouseClick);
-					dlgCircle.setColors(edgeColor, innerColor);
-					dlgCircle.setVisible(true);
+					drawingcontroller.drawCircle(mouseClick);
 					
-					if(dlgCircle.getCircle() != null) {
-						AddCommand addCommand = new AddCommand(dlgCircle.getCircle(), pnlDrawing);
-						commands.add(addCommand);
-						currentCommand++;
-						addCommand.Do();
-						return;
-					}
-					return;
 				} else if (btnShapeDonut.isSelected()) {
-					DlgDonut dlgDonut = new DlgDonut();
-					dlgDonut.setPoint(mouseClick);
-					dlgDonut.setColors(edgeColor, innerColor);
-					dlgDonut.setVisible(true);
-					
-					if(dlgDonut.getDonut() != null) {
-						AddCommand addCommand = new AddCommand(dlgDonut.getDonut(), pnlDrawing);
-						commands.add(addCommand);
-						currentCommand++;
-						addCommand.Do();
-						return;
-					}
-					return;
+					drawingcontroller.drawDonut(mouseClick);
 				}
 			}
 		};
@@ -301,60 +226,23 @@ public class FrmDrawing extends JFrame {
 				Shape shape = pnlDrawing.getShape(index);
 				
 				if (shape instanceof Point) {
-					DlgPoint dlgPoint = new DlgPoint();
-					dlgPoint.setPoint((Point)shape);
-					dlgPoint.setVisible(true);
+					drawingcontroller.instanceOfPoint(shape, index);
 					
-					if(dlgPoint.getPoint() != null) {
-						pnlDrawing.setShape(index, dlgPoint.getPoint());
-						pnlDrawing.repaint();
-					}
 				} else if (shape instanceof Line) {
-					DlgLine dlgLine = new DlgLine();
-					dlgLine.setLine((Line)shape);
-					dlgLine.setVisible(true);
+					drawingcontroller.instanceOfLine(shape, index);
 					
-					if(dlgLine.getLine() != null) {
-						pnlDrawing.setShape(index, dlgLine.getLine());
-						pnlDrawing.repaint();
-					}
 				} else if (shape instanceof Rectangle) {
-					DlgRectangle dlgRectangle = new DlgRectangle();
-					dlgRectangle.setRectangle((Rectangle)shape);
-					dlgRectangle.setVisible(true);
+					drawingcontroller.instanceOfRectangle(shape, index);
 					
-					if(dlgRectangle.getRectangle() != null) {
-						pnlDrawing.setShape(index, dlgRectangle.getRectangle());
-						pnlDrawing.repaint();
-					}
-				
 				}else if (shape instanceof Donut) {
-						DlgDonut dlgDonut = new DlgDonut();
-						dlgDonut.setDonut((Donut)shape);
-						dlgDonut.setVisible(true);
-						
-						if(dlgDonut.getDonut() != null) {
-							pnlDrawing.setShape(index, dlgDonut.getDonut());
-							pnlDrawing.repaint();
-						}
+					drawingcontroller.instanceOfDonut(shape, index);
+					
 				} else if (shape instanceof Circle) {
-					DlgCircle dlgCircle = new DlgCircle();
-					dlgCircle.setCircle((Circle)shape);
-					dlgCircle.setVisible(true);
+					drawingcontroller.instanceOfCircle(shape, index);
 					
-					if(dlgCircle.getCircle() != null) {
-						pnlDrawing.setShape(index, dlgCircle.getCircle());
-						pnlDrawing.repaint();
-					}
 				} else if (shape instanceof Hexagon) {
-					DlgHexagon dlgHexagon = new DlgHexagon();
-					dlgHexagon.setHexagon((Hexagon)shape);
-					dlgHexagon.setVisible(true);
+					drawingcontroller.instanceOfHexagon(shape, index);
 					
-					if(dlgHexagon.getHexagon() != null) {
-						pnlDrawing.setShape(index, dlgHexagon.getHexagon());
-						pnlDrawing.repaint();
-					}
 				}
 			}
 		};
@@ -363,8 +251,7 @@ public class FrmDrawing extends JFrame {
 	private ActionListener btnActionDeleteClickListener() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (pnlDrawing.isEmpty()) return;
-				if (JOptionPane.showConfirmDialog(null, "Do you really want to delete selected shape?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == 0) pnlDrawing.removeSelected();
+				drawingcontroller.delete();
 			}
 		};
 	}
@@ -388,20 +275,7 @@ public class FrmDrawing extends JFrame {
 		btnColorInner.setEnabled(true);
 	}
 	
-	private void setOperationEditDelete() {
-		activeOperation = OPERATION_EDIT_DELETE;
-		
-		btnActionEdit.setEnabled(true);
-		btnActionDelete.setEnabled(true);
-		
-		btnShapePoint.setEnabled(false);
-		btnShapeLine.setEnabled(false);
-		btnShapeRectangle.setEnabled(false);
-		btnShapeCircle.setEnabled(false);
-		btnShapeDonut.setEnabled(false);
-		btnHexagon.setEnabled(false);
-		
-		btnColorEdge.setEnabled(false);
-		btnColorInner.setEnabled(false);
+	public void addLog(String log) {
+		defaultListModel.addElement(log);
 	}
 }

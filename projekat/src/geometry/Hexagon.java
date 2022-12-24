@@ -14,13 +14,14 @@ public class Hexagon extends SurfaceShape{
 	
 	
 	//Pitati prof da li treba undo i redo za manje operacije npr select 
+	//Pitati prof oko greske neiscrtavanja jedne linije hexagone (ima veze sa bojama)
 	
 	
 	/*
 	 * odrediti MVC (izbaciti mousclick)
-	 * dovrsiti hexagon, compare, equal i srediti u frmdrawing formu
-	 * fill  treba drugacije dda se implementira 
-	 * proveriti sta znaci tacka 2 za donut */
+	 * dovrsiti hexagon, compare, equal
+	 * 
+	 *  */
 	
 	public Hexagon() {
 		
@@ -134,6 +135,7 @@ public class Hexagon extends SurfaceShape{
             polygon.addPoint(xval, yval);
         }
         
+        
         g.drawPolygon(polygon);
         
         if(isSelected()) {
@@ -148,6 +150,7 @@ public class Hexagon extends SurfaceShape{
             }
         }
         
+        g.setColor(getInnerColor());
         g.fillPolygon(polygon);
 	}
 	

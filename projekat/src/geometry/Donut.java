@@ -2,6 +2,9 @@ package geometry;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 
 public class Donut extends Circle {
 	//extends , kljucna rec za nadredjenu klasu
@@ -65,9 +68,18 @@ public class Donut extends Circle {
 	
 	@Override //Bez obzira sto Donut extenduje Circle (tj. Circle ima draw), nisu identicni oblici , moramo redefinisati metodu draw za Donut
 	public void draw(Graphics g) {
-		super.draw(g); //Crta spoljasnji krug
+		 
 		g.setColor(getColor()); //Ovo boji krug da bude izabrane boje posto ostaje plava boja iz kvadrata koji se crta oko tacki unutar Draw (u Circle)
 		g.drawOval(this.getCenter().getX() - innerRadius, this.getCenter().getY() - innerRadius, innerRadius * 2, innerRadius * 2);
+		
+		Ellipse2D eIner=new Ellipse2D.Float(getCenter().getX()-innerRadius,getCenter().getY()- innerRadius,2* innerRadius,2* innerRadius);
+		Ellipse2D eOuter=new Ellipse2D.Float(getCenter().getX()-getRadius(),getCenter().getY()- getRadius(),2* getRadius(),2* getRadius());
+		Area outer=new Area(eOuter);
+		Area iner=new Area(eIner);
+		outer.subtract(iner);
+		
+		g.setColor(getInnerColor());
+		((Graphics2D) g).fill(outer);
 		
 		if(isSelected()) {
 			g.setColor(Color.BLUE);
@@ -78,13 +90,13 @@ public class Donut extends Circle {
 		}
 	}
 	
-	@Override
+	/*@Override
 	public void fill(Graphics g) {
 		g.setColor(getInnerColor());
 		super.fill(g);
 		g.setColor(Color.WHITE);
 		g.fillOval(getCenter().getX() - this.innerRadius, getCenter().getY() - this.innerRadius, this.innerRadius * 2, this.innerRadius * 2 );
-	}
+	}*/
 	
 	@Override
 	public int compareTo(Object o) {

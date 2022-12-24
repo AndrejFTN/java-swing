@@ -22,6 +22,9 @@ public class AddCommand extends Command {
 		shapes.removeShape(shape);
 	}
 
-	
+	@Override
+	public String toString() {
+		return "add_" + shape.toString();
+	}
 	
 }
