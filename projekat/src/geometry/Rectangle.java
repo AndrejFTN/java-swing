@@ -149,4 +149,7 @@ public class Rectangle extends SurfaceShape{
 		//Pravimo ispis kako nam trazi zadatak.
 	}
 
+	public Rectangle clone() {
+		return new Rectangle(this.getUpperLeftPoint(), this.getWidth(), this.getHeight(), this.isSelected(), this.getColor(), this.getInnerColor());
+	}
 }

@@ -60,3 +60,9 @@
 /FrmDrawing$8.class
 /DrawingController.class
 /DrawingModel.class
+/UpdatePointCommand.class
+/UpdateLineCommand.class
+/UpdateRectangleCommand.class
+/UpdateDonutCommand.class
+/UpdateCircleCommand.class
+/UpdateHexagonCommand.class

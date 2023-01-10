@@ -4,10 +4,16 @@ import java.util.ArrayList;
 
 import geometry.Shape;
 
-public class AddCommand extends Command {
+public class AddCommand implements Command {
 
+	
+	private Shape shape;
+	private PnlDrawing shapes;
+	
+	
 	public AddCommand(Shape shape, PnlDrawing shapes) {
-		super(shape, shapes);
+		this.shape = shape;
+		this.shapes = shapes;
 	}
 
 	@Override

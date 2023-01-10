@@ -4,20 +4,12 @@ import java.util.ArrayList;
 
 import geometry.Shape;
 
-public abstract class Command {
+public interface  Command {
 
-	protected Shape shape;
-	protected PnlDrawing shapes;
+
 	
-	public Command(Shape shape, PnlDrawing shapes) {
-		
-		this.shape = shape;
-		this.shapes = shapes;
-		
-	}
+	void Do();
 	
-	public abstract void Do();
-	
-	public abstract void Undo();
+	void Undo();
 	
 }

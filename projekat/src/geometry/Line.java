@@ -110,4 +110,8 @@ public class Line extends Shape {
 		//zato sto implicitno konvertuje startPoint i endPoint u string
 		//jer pokusava da uradi konkatenaciju stringova
 	}
+	
+	public Line clone() {
+		return new Line(this.getStartPoint(), this.getEndPoint(), this.isSelected(), this.getColor());
+	}
 }

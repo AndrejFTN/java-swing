@@ -132,4 +132,7 @@ public class Circle extends SurfaceShape{
 		return "Center : " + center + " , radius = " + radius;
 	}
 
+	public Circle clone() {
+		return new Circle(this.getCenter(), this.getRadius(), this.isSelected(), this.getColor(), this.getInnerColor());
+	}
 }

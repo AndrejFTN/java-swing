@@ -9,7 +9,7 @@ public abstract class Shape implements Moveable, Comparable {
 	private Color color;
 	public Shape () {
 		
-	} //Moramo imati definisan prazan konstruktor (ako imamo neki drugi definisan V)
+	} 
 	
 	public Shape(Color color) {
 		this.setColor(color);
@@ -38,7 +38,7 @@ public abstract class Shape implements Moveable, Comparable {
 
 	public abstract boolean contains (int x , int y);
 	
-	public abstract void draw (Graphics g); //mora se importovati java.awt.Graphics
+	public abstract void draw (Graphics g); 
 	
 	
 }

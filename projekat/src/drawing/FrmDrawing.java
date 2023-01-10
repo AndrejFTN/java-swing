@@ -112,7 +112,13 @@ public class FrmDrawing extends JFrame {
 		contentPane.add(pnlNorth, BorderLayout.NORTH);
 		pnlNorth.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		btnActionEdit.addActionListener(btnActionEditClickListener());
+		btnActionEdit.addActionListener( 
+			 new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					drawingcontroller.editShapes();
+				}
+			}
+		);
 		pnlNorth.add(btnActionEdit);
 		
 		btnActionDelete.addActionListener(btnActionDeleteClickListener());
@@ -134,6 +140,18 @@ public class FrmDrawing extends JFrame {
 		
 		btnsOperation.add(btnOperationDrawing);
 		btnsOperation.add(btnOperationEditOrDelete);
+		
+		btnOperationDrawing.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setOperationDrawing();
+			}
+		});
+		
+		btnOperationEditOrDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setOperationEdit();
+			}
+		});
 		
 		
 		pnlNorth.add(btnRedo);
@@ -188,6 +206,8 @@ public class FrmDrawing extends JFrame {
 				Point mouseClick = drawingcontroller.makeMouseClick(e.getX(), e.getY());
 				pnlDrawing.deselect();
 				
+				
+				System.out.println(activeOperation);
 				if (activeOperation == OPERATION_EDIT_DELETE) {
 					pnlDrawing.select(mouseClick);
 					return;
@@ -217,36 +237,7 @@ public class FrmDrawing extends JFrame {
 		};
 	}
 	
-	private ActionListener btnActionEditClickListener() {
-		return new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int index = pnlDrawing.getSelected();
-				if (index == -1) return;
-				
-				Shape shape = pnlDrawing.getShape(index);
-				
-				if (shape instanceof Point) {
-					drawingcontroller.instanceOfPoint(shape, index);
-					
-				} else if (shape instanceof Line) {
-					drawingcontroller.instanceOfLine(shape, index);
-					
-				} else if (shape instanceof Rectangle) {
-					drawingcontroller.instanceOfRectangle(shape, index);
-					
-				}else if (shape instanceof Donut) {
-					drawingcontroller.instanceOfDonut(shape, index);
-					
-				} else if (shape instanceof Circle) {
-					drawingcontroller.instanceOfCircle(shape, index);
-					
-				} else if (shape instanceof Hexagon) {
-					drawingcontroller.instanceOfHexagon(shape, index);
-					
-				}
-			}
-		};
-	}
+	
 
 	private ActionListener btnActionDeleteClickListener() {
 		return new ActionListener() {
@@ -273,6 +264,24 @@ public class FrmDrawing extends JFrame {
 		
 		btnColorEdge.setEnabled(true);
 		btnColorInner.setEnabled(true);
+	}
+	
+	private void setOperationEdit() {
+		activeOperation = OPERATION_EDIT_DELETE;
+		
+		
+		btnActionEdit.setEnabled(true);
+		btnActionDelete.setEnabled(true);
+		
+		btnShapePoint.setEnabled(false);
+		btnShapeLine.setEnabled(false);
+		btnShapeRectangle.setEnabled(false);
+		btnShapeCircle.setEnabled(false);
+		btnShapeDonut.setEnabled(false);
+		btnHexagon.setEnabled(false);
+		
+		btnColorEdge.setEnabled(false);
+		btnColorInner.setEnabled(false);
 	}
 	
 	public void addLog(String log) {

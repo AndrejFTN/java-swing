@@ -1,6 +1,7 @@
 package drawing;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -28,7 +29,8 @@ public class DrawingController {
 	public void redo() {
 		if(drawingModel.getCurrentCommand() + 1 <= drawingModel.getCommands().size() - 1) {
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);;
-			drawingModel.getCommands().get(drawingModel.getCurrentCommand()).Do();	
+			drawingModel.getCommands().get(drawingModel.getCurrentCommand()).Do();
+			frmDrawing.repaint();
 		}
 		
 	}
@@ -36,7 +38,8 @@ public class DrawingController {
 	public void undo() {
 		if(drawingModel.getCurrentCommand() - 1 >= -1) {
 			drawingModel.getCommands().get(drawingModel.getCurrentCommand()).Undo();
-			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() - 1);;	
+			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() - 1);
+			frmDrawing.repaint();
 		}
 	}
 	
@@ -65,6 +68,7 @@ public class DrawingController {
 				drawingModel.getCommands().add(addCommand);
 				drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 				addCommand.Do();
+				frmDrawing.addLog(addCommand.toString());
 				return;
 			
 		}
@@ -83,6 +87,7 @@ public class DrawingController {
 				drawingModel.getCommands().add(addCommand);
 				drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 				addCommand.Do();
+				frmDrawing.addLog(addCommand.toString());
 				drawingModel.setLineWaitingForEndPoint(false);
 				return;
 			}					
@@ -103,6 +108,7 @@ public class DrawingController {
 			drawingModel.getCommands().add(addCommand);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			addCommand.Do();
+			frmDrawing.addLog(addCommand.toString());
 			return;
 		}
 	}
@@ -118,6 +124,7 @@ public class DrawingController {
 			drawingModel.getCommands().add(addCommand);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			addCommand.Do();
+			frmDrawing.addLog(addCommand.toString());
 			return;
 		}
 		return;
@@ -134,10 +141,16 @@ public class DrawingController {
 			drawingModel.getCommands().add(addCommand);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			addCommand.Do();
+			frmDrawing.addLog(addCommand.toString());
 			return;
 		}
 		return;
 	}
+	
+
+
+	
+	
 	
 	public void instanceOfPoint(Shape shape1, int index) {
 		DlgPoint dlgPoint = new DlgPoint();
@@ -145,7 +158,12 @@ public class DrawingController {
 		dlgPoint.setVisible(true);
 		
 		if(dlgPoint.getPoint() != null) {
-			pnlDrawing.setShape(index, dlgPoint.getPoint());
+			UpdatePointCommand cmd = new UpdatePointCommand((Point)shape1, dlgPoint.getPoint());
+			cmd.Do();
+			frmDrawing.addLog(cmd.toString());
+			drawingModel.getCommands().add(cmd);
+			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
+			//pnlDrawing.setShape(index, dlgPoint.getPoint());
 			pnlDrawing.repaint();
 		}
 	}
@@ -155,7 +173,11 @@ public class DrawingController {
 		dlgLine.setVisible(true);
 		
 		if(dlgLine.getLine() != null) {
-			pnlDrawing.setShape(index, dlgLine.getLine());
+			UpdateLineCommand cmd = new UpdateLineCommand((Line)shape1, dlgLine.getLine());
+			frmDrawing.addLog(cmd.toString());
+			drawingModel.getCommands().add(cmd);
+			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
+			//pnlDrawing.setShape(index, dlgLine.getLine());
 			pnlDrawing.repaint();
 		}
 	}
@@ -166,7 +188,11 @@ public class DrawingController {
 		dlgRectangle.setVisible(true);
 		
 		if(dlgRectangle.getRectangle() != null) {
-			pnlDrawing.setShape(index, dlgRectangle.getRectangle());
+			UpdateRectangleCommand cmd = new UpdateRectangleCommand((Rectangle)shape1, dlgRectangle.getRectangle());
+			frmDrawing.addLog(cmd.toString());
+			drawingModel.getCommands().add(cmd);
+			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
+			//pnlDrawing.setShape(index, dlgRectangle.getRectangle());
 			pnlDrawing.repaint();
 		}
 	}
@@ -177,7 +203,11 @@ public class DrawingController {
 		dlgDonut.setVisible(true);
 		
 		if(dlgDonut.getDonut() != null) {
-			pnlDrawing.setShape(index, dlgDonut.getDonut());
+			UpdateDonutCommand cmd = new UpdateDonutCommand((Donut)shape1, dlgDonut.getDonut());
+			frmDrawing.addLog(cmd.toString());
+			drawingModel.getCommands().add(cmd);
+			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
+			//pnlDrawing.setShape(index, dlgDonut.getDonut());
 			pnlDrawing.repaint();
 		}
 	}
@@ -188,7 +218,11 @@ public class DrawingController {
 		dlgCircle.setVisible(true);
 		
 		if(dlgCircle.getCircle() != null) {
-			pnlDrawing.setShape(index, dlgCircle.getCircle());
+			UpdateCircleCommand cmd = new UpdateCircleCommand((Circle) shape1, dlgCircle.getCircle());
+			frmDrawing.addLog(cmd.toString());
+			drawingModel.getCommands().add(cmd);
+			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
+			//pnlDrawing.setShape(index, dlgCircle.getCircle());
 			pnlDrawing.repaint();
 		}
 	}
@@ -199,7 +233,11 @@ public class DrawingController {
 		dlgHexagon.setVisible(true);
 		
 		if(dlgHexagon.getHexagon() != null) {
-			pnlDrawing.setShape(index, dlgHexagon.getHexagon());
+			UpdateHexagonCommand cmd = new UpdateHexagonCommand((Hexagon) shape1, dlgHexagon.getHexagon());
+			frmDrawing.addLog(cmd.toString());
+			drawingModel.getCommands().add(cmd);
+			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
+			//pnlDrawing.setShape(index, dlgHexagon.getHexagon());
 			pnlDrawing.repaint();
 		}
 	
@@ -213,5 +251,37 @@ public class DrawingController {
 	public Point makeMouseClick(int x, int y) {
 		return new Point(x, y);
 	}
+
+	public void editShapes() {
+		int index = pnlDrawing.getSelected();
+		if (index == -1) return;
+		
+		Shape shape = pnlDrawing.getShape(index);
+		
+		if (shape instanceof Point) {
+			instanceOfPoint(shape, index);
+			
+		} else if (shape instanceof Line) {
+			instanceOfLine(shape, index);
+			
+		} else if (shape instanceof Rectangle) {
+			instanceOfRectangle(shape, index);
+			
+		}else if (shape instanceof Donut) {
+			instanceOfDonut(shape, index);
+			
+		} else if (shape instanceof Circle) {
+			instanceOfCircle(shape, index);
+			
+		} else if (shape instanceof Hexagon) {
+			instanceOfHexagon(shape, index);
+			
+		}
+	};
+
+		
+	
+	
+	
 	
 }

@@ -8,63 +8,56 @@ import java.util.ArrayList;
 
 public class Hexagon extends SurfaceShape{
 	
-	private Point center;
-	private int radius;
-	private Point[] niz = new Point[7];
+	private hexagon.Hexagon hexagon;
 	
 	
-	//Pitati prof da li treba undo i redo za manje operacije npr select 
-	//Pitati prof oko greske neiscrtavanja jedne linije hexagone (ima veze sa bojama)
-	
-	
-	/*
-	 * odrediti MVC (izbaciti mousclick)
-	 * dovrsiti hexagon, compare, equal
-	 * 
-	 *  */
-	
+	//problem oko kastovanja, ostali konstruktori promenjeni na double kao i metoda clone
+	//ali prvi konstruktor sa ugradjenom metodom trazi int, da li ce biti problema
 	public Hexagon() {
 		
 	}
 	
 	public Hexagon(Point center, int radius) {
-		this.center = center;
-		this.radius = radius;
+		this.hexagon = new hexagon.Hexagon(center.getX(), center.getY(), (int) radius); // <--
+
 	}
 	
 	public Hexagon(Point center, int radius, Color color) {
 		this(center, radius);
-		this.setColor(color);
+		this.hexagon.setBorderColor(color);
 	}
 	
 	public Hexagon(Point center, int radius, boolean selected, Color color) {
 		this(center, radius, color);
-		this.setSelected(selected);
+		this.hexagon.setSelected(selected);
 	}
 	
 	public Hexagon(Point center, int radius, boolean selected, Color color, Color innerColor) {
 		this(center, radius, selected, color);
-		this.setInnerColor(innerColor);
+		this.hexagon.setAreaColor(innerColor);
 	}
 	
 	public double area() {
 		return ((3 * Math.sqrt(3) *
-                (radius * radius)) / 2); //zato sto je r = stranici u pravilnom hexagonu?
+                (this.hexagon.getR() * this.hexagon.getR())) / 2); //zato sto je r = stranici u pravilnom hexagonu?
 	}
 	
 	public double circumference() {
-		return 6*radius;
+		return 6*this.hexagon.getR();
 	}
 
 	@Override
 	public void moveTo(int x, int y) {
-		center.moveTo(x, y);
+		this.hexagon.setX(x);
+		this.hexagon.setY(y);
+		
 		
 	}
 
 	@Override
 	public void moveBy(int byX, int byY) {
-		center.moveBy(byX, byY);
+		this.hexagon.setX(this.hexagon.getX() + byX);
+		this.hexagon.setY(this.hexagon.getY() + byY);
 		
 	}
 
@@ -78,6 +71,11 @@ public class Hexagon extends SurfaceShape{
 	}
 
 	@Override
+	public boolean contains(int x, int y) {
+		return this.hexagon.doesContain(x, y);
+	}
+	
+	/*@Override
 	public boolean contains(int x, int y) {
 		
 		for (int y1 = 0; y1 < 6; y1++) {
@@ -119,13 +117,14 @@ public class Hexagon extends SurfaceShape{
 		double area = Math.sqrt(s* (s - sideA) * (s - sideB) * (s - sideC));
 		return area;
 	}
-	
+	*/
 
 	@Override
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
 		
-		Polygon polygon = new Polygon();
+		this.hexagon.paint(g);
+		
+		/*Polygon polygon = new Polygon();
 		g.setColor(getColor());
         for (int i = 0; i < 6; i++) {
             int xval = (int) (center.getX() + radius
@@ -151,38 +150,56 @@ public class Hexagon extends SurfaceShape{
         }
         
         g.setColor(getInnerColor());
-        g.fillPolygon(polygon);
+        g.fillPolygon(polygon);*/
+		
+		if(isSelected()) {
+        	g.setColor(Color.BLUE);
+            for (int i = 0; i < 6; i++) {
+                int xval = (int) (hexagon.getX() + hexagon.getR()
+                        * Math.cos(i * 2 * Math.PI / 6D));
+                int yval = (int) (hexagon.getY() + hexagon.getR()
+                        * Math.sin(i * 2 * Math.PI / 6D));
+                
+                g.drawRect(xval - 2, yval - 2, 4, 4);
+            }
+        }
 	}
+	
+	
+	
 	
 	@Override
 	public void fill(Graphics g) {
-	
+		
 	}
 
 	public Point getCenter() {
-		return center;
+		return new Point(this.hexagon.getX(), this.hexagon.getY());
 	}
 
 	public void setPoint(Point point) {
-		this.center = point;
+		this.hexagon.setX(point.getX());
+		this.hexagon.setY(point.getY());
 	}
 
-	public double getRadius() {
-		return radius;
+	public int getRadius() {
+		return hexagon.getR();
 	}
 	
 	public void setRadius(int radius) throws Exception {
 		if(radius < 0) {
 			throw new Exception("Vrednost poluprecnika mora biti veca od 0");
 		}
-		this.radius = radius;
+		this.hexagon.setR(radius);
 	}
 
 	@Override
 	public String toString() {
-		return "Hexagon [point=" + center + ", radius=" + radius + "]";
+		return "Hexagon [point=" + this.getCenter() + ", radius=" + this.hexagon.getR() + "]";
 	}
 
-	
+	public Hexagon clone() {
+		return new Hexagon(this.getCenter(), (int)this.getRadius(), this.isSelected(), this.getColor(), this.getInnerColor());
+	}
 	
 }

@@ -154,6 +154,7 @@ public class DlgHexagon extends JDialog{
 							hexagon = new Hexagon(new Point(newX, newY), newRadius, false, edgeColor, innerColor);
 							dispose();
 						} catch (Exception ex) {
+							ex.printStackTrace();
 							JOptionPane.showMessageDialog(null, "You entered a wrong data type.", "Error",
 									JOptionPane.ERROR_MESSAGE);
 						}
