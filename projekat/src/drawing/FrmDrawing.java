@@ -31,10 +31,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 
-public class FrmDrawing extends JFrame {
+public class FrmDrawing extends JFrame implements Observer {
 	private final int OPERATION_DRAWING = 1;
 	private final int OPERATION_EDIT_DELETE = 0;
 	
@@ -66,7 +69,7 @@ public class FrmDrawing extends JFrame {
 	
 	private JToggleButton btnHexagon = new JToggleButton("Hexagon");
 	
-	private DrawingController drawingcontroller = new DrawingController(pnlDrawing, this);
+	private DrawingController drawingcontroller;
 	private final JPanel panel = new JPanel();
 	private final JToggleButton btnOperationDrawing = new JToggleButton("Draw");
 	private final JToggleButton btnOperationEditOrDelete = new JToggleButton("Select");
@@ -102,6 +105,8 @@ public class FrmDrawing extends JFrame {
 	 */
 	public FrmDrawing() {
 		setTitle("Drawing");
+		this.drawingcontroller = new DrawingController(pnlDrawing, this);
+		this.drawingcontroller.addObserver(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 600);
 		setLocationRelativeTo(null);
@@ -260,6 +265,16 @@ public class FrmDrawing extends JFrame {
 		list.setModel(defaultListModel);
 		
 		setOperationDrawing();
+		
+		btnActionEdit.setEnabled(false);
+		btnActionDelete.setEnabled(false);
+		btnMoveUp.setEnabled(false);
+		btnMoveDown.setEnabled(false);
+		btnMoveToFront.setEnabled(false);
+		btnMoveToBottom.setEnabled(false);
+		btnRedo.setEnabled(false);
+		btnUndo.setEnabled(false);
+		
 	}
 	
 	
@@ -268,7 +283,7 @@ public class FrmDrawing extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Point mouseClick = drawingcontroller.makeMouseClick(e.getX(), e.getY());
-				//pnlDrawing.deselect();
+				
 				
 				
 				System.out.println(activeOperation);
@@ -314,10 +329,8 @@ public class FrmDrawing extends JFrame {
 	private void setOperationDrawing() {
 		activeOperation = OPERATION_DRAWING;
 		
-		//pnlDrawing.deselect();
-		
-		btnActionEdit.setEnabled(false);
-		btnActionDelete.setEnabled(false);
+		drawingcontroller.deSelectAll();
+	
 		
 		btnShapePoint.setEnabled(true);
 		btnShapeLine.setEnabled(true);
@@ -334,8 +347,7 @@ public class FrmDrawing extends JFrame {
 		activeOperation = OPERATION_EDIT_DELETE;
 		
 		
-		btnActionEdit.setEnabled(true);
-		btnActionDelete.setEnabled(true);
+
 		
 		btnShapePoint.setEnabled(false);
 		btnShapeLine.setEnabled(false);
@@ -357,5 +369,23 @@ public class FrmDrawing extends JFrame {
 	}
 	public Color getGlobalInnerColor() {
 		return btnInnerColor.getBackground();
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		System.out.println("Update");
+		if(arg == null) {
+			return;
+		}
+		ObserverMessage observerMessage = (ObserverMessage)arg;
+		btnActionDelete.setEnabled(observerMessage.isEnableDelete());
+		btnActionEdit.setEnabled(observerMessage.isEnableEdit());
+		btnUndo.setEnabled(observerMessage.isEnableUndo());
+		btnRedo.setEnabled(observerMessage.isEnableRedo());
+		btnMoveUp.setEnabled(observerMessage.isEnableMoveUp());
+		btnMoveDown.setEnabled(observerMessage.isEnableMoveDown());
+		btnMoveToFront.setEnabled(observerMessage.isEnableMoveToFront());
+		btnMoveToBottom.setEnabled(observerMessage.isEnableMoveToBottom());
+		
 	}
 }

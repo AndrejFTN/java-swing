@@ -53,6 +53,15 @@ public class PnlDrawing extends JPanel {
 		shapes.removeIf(shape -> shape.isSelected());
 		repaint();
 	}
+	public ArrayList getSelectedShapes() {
+		ArrayList<Shape> helperList = new ArrayList<Shape>();
+		for(int i = 0; i < shapes.size(); i ++) {
+			if(shapes.get(i).isSelected()) {
+				helperList.add(shapes.get(i));
+			}
+		}
+		return helperList;
+	}
 	
 	
 	public int getSelected() {

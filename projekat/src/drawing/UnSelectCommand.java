@@ -1,23 +1,27 @@
 package drawing;
 
+import java.util.ArrayList;
+
 import geometry.Shape;
 
 public class UnSelectCommand implements Command {
-	private Shape shape;
+	private ArrayList<Shape> shapes;
 	
-	public UnSelectCommand(Shape shape) {
-		this.shape = shape;
+	public UnSelectCommand(ArrayList<Shape> shapes) {
+		this.shapes = shapes;
 	}
 	
 	@Override
 	public void Do() {
-		this.shape.setSelected(false);
-		
+		for(int i = 0; i < shapes.size(); i ++) {
+			shapes.get(i).setSelected(false);
+		}
 	}
 
 	@Override
 	public void Undo() {
-		this.shape.setSelected(true);
-		
+		for(int i = 0; i < shapes.size(); i ++) {
+			shapes.get(i).setSelected(true);
+		}
 	}
 }
