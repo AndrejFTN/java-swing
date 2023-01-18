@@ -9,7 +9,8 @@ import geometry.Shape;
 public class DrawingModel {
 	
 	public int currentCommand = -1;
-	public ArrayList<Command> commands = new ArrayList<Command>();
+	public ArrayList<Command> undoCommands = new ArrayList<Command>();
+	public ArrayList<Command> redoCommands = new ArrayList<Command>();
 	
 	public Color edgeColor = Color.BLACK, innerColor = Color.WHITE;
 	
@@ -72,15 +73,29 @@ public class DrawingModel {
 
 
 
-	public ArrayList<Command> getCommands() {
-		return commands;
+	public ArrayList<Command> getUndoCommands() {
+		return undoCommands;
 	}
 
 
 
 
-	public void setCommands(ArrayList<Command> commands) {
-		this.commands = commands;
+	public void setUndoCommands(ArrayList<Command> commands) {
+		this.undoCommands = commands;
+	}
+
+
+
+
+	public ArrayList<Command> getRedoCommands() {
+		return redoCommands;
+	}
+
+
+
+
+	public void setRedoCommands(ArrayList<Command> redoCommands) {
+		this.redoCommands = redoCommands;
 	}
 
 
@@ -103,5 +118,6 @@ public class DrawingModel {
 	public DrawingModel() {
 		
 	}
+
 	
 }

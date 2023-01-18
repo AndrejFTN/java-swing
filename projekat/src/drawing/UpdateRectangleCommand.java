@@ -18,7 +18,7 @@ public class UpdateRectangleCommand implements Command {
 
 	@Override
 	public void Do() {
-		oldRectangle = originalRectangle.clone();
+		originalRectangle = oldRectangle.clone();
 		
 		oldRectangle.setUpperLeftPoint(newRectangle.getUpperLeftPoint());
 		oldRectangle.setHeight(newRectangle.getHeight());

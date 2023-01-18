@@ -40,6 +40,10 @@ public class PnlDrawing extends JPanel {
 		shapes.set(index, shape);
 	}
 	
+	public void insertOnIndex(int index, Shape shape) {
+		shapes.add(index, shape);
+	}
+	
 	public void removeShape(Shape shape) {
 		shapes.remove(shape);
 		repaint();
@@ -50,20 +54,6 @@ public class PnlDrawing extends JPanel {
 		repaint();
 	}
 	
-	public void deselect() {
-		shapes.forEach(shape -> shape.setSelected(false));
-		repaint();
-	}
-	
-	public void select(Point point) {
-		for (i = shapes.size()-1; i >= 0; i--) {
-			if (shapes.get(i).contains(point.getX(), point.getY())) {
-				shapes.get(i).setSelected(true);
-				repaint();
-				return;
-			}
-		}
-	}
 	
 	public int getSelected() {
 		for (i = shapes.size()-1; i >= 0; i--) {
@@ -80,5 +70,16 @@ public class PnlDrawing extends JPanel {
 	
 	public ArrayList<Shape> getShapes() {
 		return shapes;
+	}
+	
+	public void swapShapes(int index1, int index2) {
+		Shape placeHolder = shapes.get(index1);
+		shapes.set(index1, shapes.get(index2));
+		shapes.set(index2, placeHolder);
+	}
+
+	public void removeOnIndex(int index) {
+		shapes.remove(index);
+		
 	}
 }

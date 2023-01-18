@@ -1,6 +1,5 @@
 package drawing;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
@@ -27,30 +26,30 @@ public class DrawingController {
 	}
 	
 	public void redo() {
-		if(drawingModel.getCurrentCommand() + 1 <= drawingModel.getCommands().size() - 1) {
-			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);;
-			drawingModel.getCommands().get(drawingModel.getCurrentCommand()).Do();
-			frmDrawing.repaint();
-		}
+		Command command = drawingModel.getRedoCommands().get(drawingModel.getRedoCommands().size() - 1);
+		command.Do();
+		drawingModel.getRedoCommands().remove(drawingModel.getRedoCommands().size() - 1);
+		drawingModel.getUndoCommands().add(command);
+		pnlDrawing.repaint();
 		
 	}
 	
 	public void undo() {
-		if(drawingModel.getCurrentCommand() - 1 >= -1) {
-			drawingModel.getCommands().get(drawingModel.getCurrentCommand()).Undo();
-			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() - 1);
-			frmDrawing.repaint();
-		}
+		Command command = drawingModel.getUndoCommands().get(drawingModel.getUndoCommands().size() - 1);
+		command.Undo();
+		drawingModel.getUndoCommands().remove(drawingModel.getUndoCommands().size() - 1);
+		drawingModel.getRedoCommands().add(command);
+		pnlDrawing.repaint();
 	}
 	
 	public void drawPoint(Point point) {
 		DlgPoint dlgPoint = new DlgPoint();
 		dlgPoint.setPoint(point);
-		dlgPoint.setColors(drawingModel.getEdgeColor());
+		dlgPoint.setColors(frmDrawing.getGlobalOutterColor());
 		dlgPoint.setVisible(true);
 		if(dlgPoint.getPoint() != null) {
 			AddCommand addCommand = new AddCommand(dlgPoint.getPoint(), pnlDrawing);
-			drawingModel.getCommands().add(addCommand);
+			drawingModel.getUndoCommands().add(addCommand);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);;
 			addCommand.Do();
 			frmDrawing.addLog(addCommand.toString());
@@ -61,11 +60,11 @@ public class DrawingController {
 	public void drawHexagon(Point point) {
 		DlgHexagon dlgHexagon = new DlgHexagon();
 		dlgHexagon.setPoint(point);
-		dlgHexagon.setColors(drawingModel.getEdgeColor(), drawingModel.getInnerColor());
+		dlgHexagon.setColors(frmDrawing.getGlobalOutterColor(), frmDrawing.getGlobalInnerColor());
 		dlgHexagon.setVisible(true);
 		if(dlgHexagon.getHexagon() != null) {
 				AddCommand addCommand = new AddCommand(dlgHexagon.getHexagon(), pnlDrawing);
-				drawingModel.getCommands().add(addCommand);
+				drawingModel.getUndoCommands().add(addCommand);
 				drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 				addCommand.Do();
 				frmDrawing.addLog(addCommand.toString());
@@ -80,11 +79,11 @@ public class DrawingController {
 			DlgLine dlgLine = new DlgLine();
 			Line line = new Line(drawingModel.getStartPoint(),point);
 			dlgLine.setLine(line);
-			dlgLine.setColors(drawingModel.getEdgeColor());
+			dlgLine.setColors(frmDrawing.getGlobalOutterColor());
 			dlgLine.setVisible(true);
 			if(dlgLine.getLine()!= null) {
 				AddCommand addCommand = new AddCommand(dlgLine.getLine(), pnlDrawing);
-				drawingModel.getCommands().add(addCommand);
+				drawingModel.getUndoCommands().add(addCommand);
 				drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 				addCommand.Do();
 				frmDrawing.addLog(addCommand.toString());
@@ -100,12 +99,12 @@ public class DrawingController {
 	public void drawRectangle(Point point) {
 		DlgRectangle dlgRectangle = new DlgRectangle();
 		dlgRectangle.setPoint(point);
-		dlgRectangle.setColors(drawingModel.getEdgeColor(), drawingModel.getInnerColor());
+		dlgRectangle.setColors(frmDrawing.getGlobalOutterColor(), frmDrawing.getGlobalInnerColor());
 		dlgRectangle.setVisible(true);
 		
 		if(dlgRectangle.getRectangle() != null) {
 			AddCommand addCommand = new AddCommand(dlgRectangle.getRectangle(), pnlDrawing);
-			drawingModel.getCommands().add(addCommand);
+			drawingModel.getUndoCommands().add(addCommand);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			addCommand.Do();
 			frmDrawing.addLog(addCommand.toString());
@@ -116,12 +115,12 @@ public class DrawingController {
 	public void drawCircle(Point point) {
 		DlgCircle dlgCircle = new DlgCircle();
 		dlgCircle.setPoint(point);
-		dlgCircle.setColors(drawingModel.getEdgeColor(), drawingModel.getInnerColor());
+		dlgCircle.setColors(frmDrawing.getGlobalOutterColor(), frmDrawing.getGlobalInnerColor());
 		dlgCircle.setVisible(true);
 		
 		if(dlgCircle.getCircle() != null) {
 			AddCommand addCommand = new AddCommand(dlgCircle.getCircle(), pnlDrawing);
-			drawingModel.getCommands().add(addCommand);
+			drawingModel.getUndoCommands().add(addCommand);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			addCommand.Do();
 			frmDrawing.addLog(addCommand.toString());
@@ -133,12 +132,12 @@ public class DrawingController {
 	public void drawDonut(Point point) {
 		DlgDonut dlgDonut = new DlgDonut();
 		dlgDonut.setPoint(point);
-		dlgDonut.setColors(drawingModel.getEdgeColor(), drawingModel.getInnerColor());
+		dlgDonut.setColors(frmDrawing.getGlobalOutterColor(), frmDrawing.getGlobalInnerColor());
 		dlgDonut.setVisible(true);
 		
 		if(dlgDonut.getDonut() != null) {
 			AddCommand addCommand = new AddCommand(dlgDonut.getDonut(), pnlDrawing);
-			drawingModel.getCommands().add(addCommand);
+			drawingModel.getUndoCommands().add(addCommand);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			addCommand.Do();
 			frmDrawing.addLog(addCommand.toString());
@@ -161,7 +160,7 @@ public class DrawingController {
 			UpdatePointCommand cmd = new UpdatePointCommand((Point)shape1, dlgPoint.getPoint());
 			cmd.Do();
 			frmDrawing.addLog(cmd.toString());
-			drawingModel.getCommands().add(cmd);
+			drawingModel.getUndoCommands().add(cmd);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			//pnlDrawing.setShape(index, dlgPoint.getPoint());
 			pnlDrawing.repaint();
@@ -174,8 +173,9 @@ public class DrawingController {
 		
 		if(dlgLine.getLine() != null) {
 			UpdateLineCommand cmd = new UpdateLineCommand((Line)shape1, dlgLine.getLine());
+			cmd.Do();
 			frmDrawing.addLog(cmd.toString());
-			drawingModel.getCommands().add(cmd);
+			drawingModel.getUndoCommands().add(cmd);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			//pnlDrawing.setShape(index, dlgLine.getLine());
 			pnlDrawing.repaint();
@@ -189,8 +189,9 @@ public class DrawingController {
 		
 		if(dlgRectangle.getRectangle() != null) {
 			UpdateRectangleCommand cmd = new UpdateRectangleCommand((Rectangle)shape1, dlgRectangle.getRectangle());
+			cmd.Do();
 			frmDrawing.addLog(cmd.toString());
-			drawingModel.getCommands().add(cmd);
+			drawingModel.getUndoCommands().add(cmd);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			//pnlDrawing.setShape(index, dlgRectangle.getRectangle());
 			pnlDrawing.repaint();
@@ -204,8 +205,9 @@ public class DrawingController {
 		
 		if(dlgDonut.getDonut() != null) {
 			UpdateDonutCommand cmd = new UpdateDonutCommand((Donut)shape1, dlgDonut.getDonut());
+			cmd.Do();
 			frmDrawing.addLog(cmd.toString());
-			drawingModel.getCommands().add(cmd);
+			drawingModel.getUndoCommands().add(cmd);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			//pnlDrawing.setShape(index, dlgDonut.getDonut());
 			pnlDrawing.repaint();
@@ -219,8 +221,9 @@ public class DrawingController {
 		
 		if(dlgCircle.getCircle() != null) {
 			UpdateCircleCommand cmd = new UpdateCircleCommand((Circle) shape1, dlgCircle.getCircle());
+			cmd.Do();
 			frmDrawing.addLog(cmd.toString());
-			drawingModel.getCommands().add(cmd);
+			drawingModel.getUndoCommands().add(cmd);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			//pnlDrawing.setShape(index, dlgCircle.getCircle());
 			pnlDrawing.repaint();
@@ -234,8 +237,9 @@ public class DrawingController {
 		
 		if(dlgHexagon.getHexagon() != null) {
 			UpdateHexagonCommand cmd = new UpdateHexagonCommand((Hexagon) shape1, dlgHexagon.getHexagon());
+			cmd.Do();
 			frmDrawing.addLog(cmd.toString());
-			drawingModel.getCommands().add(cmd);
+			drawingModel.getUndoCommands().add(cmd);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			//pnlDrawing.setShape(index, dlgHexagon.getHexagon());
 			pnlDrawing.repaint();
@@ -277,10 +281,47 @@ public class DrawingController {
 			instanceOfHexagon(shape, index);
 			
 		}
-	};
+	}
 
+	public void moveDown() {
+		MoveDownCommand cmd = new MoveDownCommand(pnlDrawing, pnlDrawing.getSelected());
+		cmd.Do();
+		frmDrawing.addLog(cmd.toString());
+		drawingModel.getUndoCommands().add(cmd);
+		pnlDrawing.repaint();
 		
+	}
 	
+	public void moveToFront() {
+		MoveToFrontCommand cmd = new MoveToFrontCommand(pnlDrawing, pnlDrawing.getSelected());
+		cmd.Do();
+		frmDrawing.addLog(cmd.toString());
+		drawingModel.getUndoCommands().add(cmd);
+		pnlDrawing.repaint();
+	}
+	
+	public void moveUp() {
+		MoveUpCommand cmd = new MoveUpCommand(pnlDrawing, pnlDrawing.getSelected());
+		cmd.Do();
+		frmDrawing.addLog(cmd.toString());
+		drawingModel.getUndoCommands().add(cmd);
+		drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);//ne treba vise  svugde
+		pnlDrawing.repaint();
+
+	}
+	
+	public void moveToBottom() {
+		MoveToBottomCommand cmd = new MoveToBottomCommand(pnlDrawing, pnlDrawing.getSelected());
+		cmd.Do();
+		frmDrawing.addLog(cmd.toString());
+		drawingModel.getUndoCommands().add(cmd);	
+		pnlDrawing.repaint();
+	}
+
+	public void mouseClicked(Point mouseClick) {
+		
+		
+	}
 	
 	
 	

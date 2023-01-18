@@ -14,12 +14,17 @@ public class UpdateCircleCommand implements Command{
 	
 	@Override
 	public void Do() {
-		originalCircle = oldCircle;
+		originalCircle = oldCircle.clone();
 		
 		oldCircle.setCenter(newCircle.getCenter());
 		oldCircle.setColor(newCircle.getColor());
 		oldCircle.setInnerColor(newCircle.getInnerColor());
-		//oldCircle.setRadius(newCircle.getRadius());
+		try {
+			oldCircle.setRadius(newCircle.getRadius());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		oldCircle.setSelected(newCircle.isSelected());
 	}
 
@@ -28,7 +33,12 @@ public class UpdateCircleCommand implements Command{
 		oldCircle.setCenter(originalCircle.getCenter());
 		oldCircle.setColor(originalCircle.getColor());
 		oldCircle.setInnerColor(originalCircle.getInnerColor());
-		//oldCircle.setRadius(originalCircle.getRadius());
+		try {
+			oldCircle.setRadius(originalCircle.getRadius());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		oldCircle.setSelected(originalCircle.isSelected());
 		
 	}

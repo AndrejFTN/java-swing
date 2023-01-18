@@ -66,3 +66,15 @@
 /UpdateDonutCommand.class
 /UpdateCircleCommand.class
 /UpdateHexagonCommand.class
+/MoveUpCommand.class
+/FrmDrawing$10.class
+/FrmDrawing$11.class
+/FrmDrawing$12.class
+/FrmDrawing$9.class
+/MoveToFrontCommand.class
+/MoveToBottomCommand.class
+/MoveDownCommand.class
+/FrmDrawing$13.class
+/FrmDrawing$14.class
+/SelectCommand.class
+/UnSelectCommand.class

@@ -13,13 +13,18 @@ public class UpdateHexagonCommand implements Command{
 	
 	@Override
 	public void Do() {
-		originalHexagon = oldHexagon;
+		originalHexagon = oldHexagon.clone();
 		
 		
 		oldHexagon.setColor(newHexagon.getColor());
 		oldHexagon.setInnerColor(newHexagon.getInnerColor());
 		oldHexagon.setPoint(newHexagon.getCenter());
-		//oldHexagon.setRadius(newHexagon.getRadius()); try catch u hexagonu, da li treba i ovde, tako i za circle
+		try {
+			oldHexagon.setRadius(newHexagon.getRadius());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		oldHexagon.setSelected(newHexagon.isSelected());
 	}
 
@@ -28,7 +33,12 @@ public class UpdateHexagonCommand implements Command{
 		oldHexagon.setColor(originalHexagon.getColor());
 		oldHexagon.setInnerColor(originalHexagon.getInnerColor());
 		oldHexagon.setPoint(originalHexagon.getCenter());
-		//oldHexagon.setRadius(originalHexagon.getRadius()); try catch u hexagonu, da li treba i ovde, tako i za circle
+		try {
+			oldHexagon.setRadius(originalHexagon.getRadius());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		oldHexagon.setSelected(originalHexagon.isSelected());
 		
 	}

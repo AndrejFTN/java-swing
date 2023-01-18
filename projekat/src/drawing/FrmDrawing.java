@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 
 import geometry.Circle;
 import geometry.Donut;
@@ -73,6 +74,12 @@ public class FrmDrawing extends JFrame {
 	private final JList list = new JList();
 	
 	private DefaultListModel<String> defaultListModel = new DefaultListModel<>();
+	private final JButton btnMoveUp = new JButton("Move Up");
+	private final JButton btnMoveDown = new JButton("Move down");
+	private final JButton btnMoveToFront = new JButton("Move to front");
+	private final JButton btnMoveToBottom = new JButton("Move to bottom");
+	private final JButton btnOutterColor = new JButton("Outter color");
+	private final JButton btnInnerColor = new JButton("Inner color");
 	
 	/**
 	 * Launch the application.
@@ -158,6 +165,63 @@ public class FrmDrawing extends JFrame {
 		
 		pnlNorth.add(btnUndo);
 		
+		pnlNorth.add(btnMoveUp);
+		btnMoveUp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawingcontroller.moveUp();
+			}
+		});
+		
+		pnlNorth.add(btnMoveDown);	
+		btnMoveDown.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawingcontroller.moveDown();
+			}
+		});
+		
+		pnlNorth.add(btnMoveToFront);	
+		btnMoveToFront.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawingcontroller.moveToFront();
+			}
+		});
+		
+		pnlNorth.add(btnMoveToBottom);
+		btnMoveToBottom.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawingcontroller.moveToBottom();
+			}
+		});
+
+		
+		pnlNorth.add(btnOutterColor);
+		btnOutterColor.setBackground(Color.black);
+		btnOutterColor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Color outterColor = JColorChooser.showDialog(null, "Choose outter color", btnOutterColor.getBackground());
+				if(outterColor != null) {
+					btnOutterColor.setBackground(outterColor);
+				} else {
+					btnOutterColor.setBackground(Color.black);
+				}
+			}
+			
+		});
+		
+		pnlNorth.add(btnInnerColor);
+		btnInnerColor.setBackground(Color.white);
+		btnInnerColor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Color innerColor = JColorChooser.showDialog(null, "Choose inner color", btnInnerColor.getBackground());
+				if(innerColor != null) {
+					btnInnerColor.setBackground(innerColor);
+				} else {
+					btnInnerColor.setBackground(Color.white);
+				}
+			}
+		});
+	
+		
 		JPanel pnlSouth = new JPanel();
 		contentPane.add(pnlSouth, BorderLayout.SOUTH);
 		pnlSouth.setLayout(new BorderLayout(0, 0));
@@ -204,12 +268,12 @@ public class FrmDrawing extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Point mouseClick = drawingcontroller.makeMouseClick(e.getX(), e.getY());
-				pnlDrawing.deselect();
+				//pnlDrawing.deselect();
 				
 				
 				System.out.println(activeOperation);
 				if (activeOperation == OPERATION_EDIT_DELETE) {
-					pnlDrawing.select(mouseClick);
+					drawingcontroller.mouseClicked(mouseClick);
 					return;
 				}
 				
@@ -250,7 +314,7 @@ public class FrmDrawing extends JFrame {
 	private void setOperationDrawing() {
 		activeOperation = OPERATION_DRAWING;
 		
-		pnlDrawing.deselect();
+		//pnlDrawing.deselect();
 		
 		btnActionEdit.setEnabled(false);
 		btnActionDelete.setEnabled(false);
@@ -286,5 +350,12 @@ public class FrmDrawing extends JFrame {
 	
 	public void addLog(String log) {
 		defaultListModel.addElement(log);
+	}
+	
+	public Color getGlobalOutterColor() {
+		return btnOutterColor.getBackground();
+	}
+	public Color getGlobalInnerColor() {
+		return btnInnerColor.getBackground();
 	}
 }
