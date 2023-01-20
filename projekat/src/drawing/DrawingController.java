@@ -1,9 +1,14 @@
 package drawing;
 
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import geometry.Circle;
@@ -13,10 +18,15 @@ import geometry.Line;
 import geometry.Point;
 import geometry.Rectangle;
 import geometry.Shape;
+import strategy.SaveSerialized;
+import strategy.SaveStrategy;
 
 public class DrawingController extends Observable{
 	
 	private PnlDrawing pnlDrawing;
+	
+	private SaveStrategy saveStrategy = new SaveStrategy(null);
+	private String filePath = "";
 	
 	private DrawingModel drawingModel = new DrawingModel();
 	private FrmDrawing frmDrawing;
@@ -391,5 +401,36 @@ public class DrawingController extends Observable{
 		observerMessage.setEnableMoveToBottom(pnlDrawing.getSelectedShapes().size() == 1 && pnlDrawing.getSelected() != 0);
 		this.setChanged();
 		this.notifyObservers(observerMessage);
+	}
+	
+	public void writeSerialized() {
+		this.saveStrategy.setSaver(new SaveSerialized(pnlDrawing.getShapes()));
+		this.filePath = saveStrategy.saveAs();
+	}
+	
+	public void save() {
+		this.saveStrategy.save(this.filePath);
+	}
+	
+	public void readSerialized() {
+		JFileChooser jFileChooser = new JFileChooser(new File("D:\\"));
+		jFileChooser.setDialogTitle("Choose file");
+		int response = jFileChooser.showOpenDialog(null);
+		if(response == JFileChooser.APPROVE_OPTION) {
+			this.filePath = jFileChooser.getSelectedFile().getAbsolutePath();
+			try {
+				ObjectInputStream stream = new ObjectInputStream(new FileInputStream(this.filePath));
+				ArrayList<Shape> helper = (ArrayList<Shape>)stream.readObject();
+				pnlDrawing.setShapes(helper);
+				frmDrawing.repaint();
+				drawingModel.getUndoCommands().clear();
+				drawingModel.getRedoCommands().clear();
+				informObservers();
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+			} catch (ClassNotFoundException e) {
+				JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 }

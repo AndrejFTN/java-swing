@@ -91,4 +91,8 @@ public class PnlDrawing extends JPanel {
 		shapes.remove(index);
 		
 	}
+	
+	public void setShapes(ArrayList<Shape> shapes) {
+		this.shapes = shapes;
+	}
 }

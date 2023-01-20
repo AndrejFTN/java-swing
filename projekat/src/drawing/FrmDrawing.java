@@ -36,6 +36,9 @@ import java.util.Observer;
 
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class FrmDrawing extends JFrame implements Observer {
 	private final int OPERATION_DRAWING = 1;
@@ -83,6 +86,14 @@ public class FrmDrawing extends JFrame implements Observer {
 	private final JButton btnMoveToBottom = new JButton("Move to bottom");
 	private final JButton btnOutterColor = new JButton("Outter color");
 	private final JButton btnInnerColor = new JButton("Inner color");
+	private final JMenuBar menuBar = new JMenuBar();
+	private final JMenu mnRead = new JMenu("Read");
+	private final JMenuItem mntmReadSerialized = new JMenuItem("Serialized");
+	private final JMenuItem mntmReadLog = new JMenuItem("Log");
+	private final JMenu mnWrite = new JMenu("Write");
+	private final JMenuItem mntmWriteSerialized = new JMenuItem("Serialized");
+	private final JMenuItem mntmLogWrite = new JMenuItem("Log");
+	private final JMenuItem mntmSave = new JMenuItem("Save");
 	
 	/**
 	 * Launch the application.
@@ -111,6 +122,41 @@ public class FrmDrawing extends JFrame implements Observer {
 		setBounds(100, 100, 1200, 600);
 		setLocationRelativeTo(null);
 		setMinimumSize(new Dimension(1200, 600));
+		
+		setJMenuBar(menuBar);
+		
+		menuBar.add(mnRead);
+		
+		mnRead.add(mntmReadSerialized);
+		mntmReadSerialized.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawingcontroller.readSerialized();
+			}
+		}
+	);
+		
+		mnRead.add(mntmReadLog);
+		
+		menuBar.add(mnWrite);
+		
+		mnWrite.add(mntmWriteSerialized);
+		mntmWriteSerialized.addActionListener( new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					drawingcontroller.writeSerialized();
+				}
+			}
+		);
+		
+		mnWrite.add(mntmLogWrite);
+		
+		mnWrite.add(mntmSave);
+		mntmSave.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawingcontroller.save();
+			}
+		}
+	);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		setContentPane(contentPane);
@@ -388,4 +434,6 @@ public class FrmDrawing extends JFrame implements Observer {
 		btnMoveToBottom.setEnabled(observerMessage.isEnableMoveToBottom());
 		
 	}
+	
+	
 }
