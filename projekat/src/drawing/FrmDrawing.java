@@ -148,6 +148,14 @@ public class FrmDrawing extends JFrame implements Observer {
 		);
 		
 		mnWrite.add(mntmLogWrite);
+		mntmLogWrite.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawingcontroller.writeLog();
+			}
+		}
+	);
+		
+		
 		
 		mnWrite.add(mntmSave);
 		mntmSave.addActionListener( new ActionListener() {
@@ -202,6 +210,7 @@ public class FrmDrawing extends JFrame implements Observer {
 		btnOperationDrawing.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setOperationDrawing();
+				drawingcontroller.deSelectAll();
 			}
 		});
 		
@@ -375,7 +384,7 @@ public class FrmDrawing extends JFrame implements Observer {
 	private void setOperationDrawing() {
 		activeOperation = OPERATION_DRAWING;
 		
-		drawingcontroller.deSelectAll();
+		
 	
 		
 		btnShapePoint.setEnabled(true);
@@ -392,8 +401,6 @@ public class FrmDrawing extends JFrame implements Observer {
 	private void setOperationEdit() {
 		activeOperation = OPERATION_EDIT_DELETE;
 		
-		
-
 		
 		btnShapePoint.setEnabled(false);
 		btnShapeLine.setEnabled(false);
@@ -435,5 +442,7 @@ public class FrmDrawing extends JFrame implements Observer {
 		
 	}
 	
-	
+	public DefaultListModel<String> getDefaultListModel(){
+		return defaultListModel;
+	}
 }

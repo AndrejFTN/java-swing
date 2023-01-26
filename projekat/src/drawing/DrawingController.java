@@ -18,6 +18,7 @@ import geometry.Line;
 import geometry.Point;
 import geometry.Rectangle;
 import geometry.Shape;
+import strategy.SaveLog;
 import strategy.SaveSerialized;
 import strategy.SaveStrategy;
 
@@ -381,12 +382,14 @@ public class DrawingController extends Observable{
 	}
 	
 	public void deSelectAll() {
-		UnSelectCommand cmd = new UnSelectCommand(pnlDrawing.getSelectedShapes());
-		cmd.Do();
-		informObservers();
-		frmDrawing.addLog(cmd.toString());
-		drawingModel.getUndoCommands().add(cmd);	
-		pnlDrawing.repaint();
+		if(pnlDrawing.getSelectedShapes().size() > 0) {
+			UnSelectCommand cmd = new UnSelectCommand(pnlDrawing.getSelectedShapes());
+			cmd.Do();
+			informObservers();
+			frmDrawing.addLog(cmd.toString());
+			drawingModel.getUndoCommands().add(cmd);	
+			pnlDrawing.repaint();
+		}
 	}
 	
 	public void informObservers() {
@@ -433,4 +436,11 @@ public class DrawingController extends Observable{
 			}
 		}
 	}
+
+	public void writeLog() {
+		this.saveStrategy.setSaver(new SaveLog(frmDrawing.getDefaultListModel()));
+		this.filePath = saveStrategy.saveAs();
+	}
+	//Struktura stringova: Komanda/Oblik\karakteristike oblika; \/ = separatori
+	// Draw Circle radius=10 color=red innercolor=blue
 }
