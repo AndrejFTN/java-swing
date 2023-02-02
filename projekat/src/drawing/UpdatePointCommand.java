@@ -35,7 +35,8 @@ public class UpdatePointCommand implements Command {
 
 	@Override
 	public String toString() {
-		return "Update_" + pointOriginal.toString() + "|" + newPoint.toString();
+		return "Update,Point,x:" + pointOriginal.getX() + ",y:" + pointOriginal.getY() + ",Selected:" + pointOriginal.isSelected() +
+				",Color:" + pointOriginal.getColor().getRGB() + ",newPoint x:" + newPoint.getX() + ",y:" + newPoint.getY() + ",select:" + newPoint.isSelected() + ",color:" + newPoint.getColor().getRGB();
 	}
 	
 }

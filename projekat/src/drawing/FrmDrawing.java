@@ -94,6 +94,7 @@ public class FrmDrawing extends JFrame implements Observer {
 	private final JMenuItem mntmWriteSerialized = new JMenuItem("Serialized");
 	private final JMenuItem mntmLogWrite = new JMenuItem("Log");
 	private final JMenuItem mntmSave = new JMenuItem("Save");
+	private final JButton btnLoadLog = new JButton("Load");
 	
 	/**
 	 * Launch the application.
@@ -136,6 +137,12 @@ public class FrmDrawing extends JFrame implements Observer {
 	);
 		
 		mnRead.add(mntmReadLog);
+		mntmReadLog.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawingcontroller.readLog();
+			}
+		}
+	);
 		
 		menuBar.add(mnWrite);
 		
@@ -329,6 +336,14 @@ public class FrmDrawing extends JFrame implements Observer {
 		btnMoveToBottom.setEnabled(false);
 		btnRedo.setEnabled(false);
 		btnUndo.setEnabled(false);
+		
+		pnlNorth.add(btnLoadLog);
+		btnLoadLog.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawingcontroller.loadLog();
+			}
+		}
+	);
 		
 	}
 	

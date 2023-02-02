@@ -47,7 +47,7 @@ public class Rectangle extends SurfaceShape{
 	public int circumference() {
 		return this.height * 2 + 2 * this.width;
 	}
-	//Overriding (redefinicija) metode , implementacija je razlicita od originalne.
+	
 	public boolean equals(Object obj) {
 		if (obj instanceof Rectangle) {
 			Rectangle pomocna = (Rectangle) obj;
@@ -145,8 +145,9 @@ public class Rectangle extends SurfaceShape{
 	
 	
 	public String toString() {
-		return "Upper left point : " + upperLeftPoint + " , width = " + width + " , height = " + height;
-		//Pravimo ispis kako nam trazi zadatak.
+		return "Rectangle,x:" + upperLeftPoint.getX() + ",y:" + upperLeftPoint.getY() + ",height:" + this.height + 
+				",width:" + this.width + ",color:" + this.getColor().getRGB() + ",innerColor:" + this.getInnerColor().getRGB() + ",selected:" + this.isSelected();
+		
 	}
 
 	public Rectangle clone() {

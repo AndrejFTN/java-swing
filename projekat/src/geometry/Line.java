@@ -38,7 +38,6 @@ public class Line extends Shape {
 	
 	public boolean equals(Object obj) {
 		if (obj instanceof Line) {
-			//imamo implementaciju da li su dve tacke jednake pa pozivamo vec definisanu..
 			Line pomocna = (Line) obj;
 			if (this.startPoint.equals(pomocna.startPoint) && this.endPoint.equals(pomocna.endPoint))
 				return true;
@@ -51,7 +50,6 @@ public class Line extends Shape {
 	
 	public boolean contains(int x , int y) {
 		return this.startPoint.distance(x, y) + this.endPoint.distance(x, y) - length() <= 2;
-		//Da li je tacka koju je korisnik izabrao unutar (na liniji.) od distance od start i end pointa (cela duzina linije kad se sabere)
 	}
 	
 	@Override
@@ -68,7 +66,7 @@ public class Line extends Shape {
 
 	@Override
 	public void moveTo(int x, int y) {
-		//Necemo implementirati (fiktivno samo)
+		
 		
 	}
 
@@ -76,12 +74,12 @@ public class Line extends Shape {
 	public void moveBy(int byX, int byY) {
 		this.startPoint.moveBy(byX, byY);
 		this.endPoint.moveBy(byX, byY);
-		//Iskoristicemo implementaciju iz tacke.
+		
 	}
 	
 	@Override
 	public int compareTo(Object o) {
-		//Poredimo duzine linija
+		
 		if (o instanceof Line) {
 			return (int)(this.length() - ((Line)o).length());
 		}
@@ -106,9 +104,9 @@ public class Line extends Shape {
 	
 	
 	public String toString() {
-		return startPoint + " --> " + endPoint; //Ne moramo pozvati startPoint.toString() , 
-		//zato sto implicitno konvertuje startPoint i endPoint u string
-		//jer pokusava da uradi konkatenaciju stringova
+		return "Line,StartX:" + startPoint.getX() + ",StartY:" + startPoint.getY() + ",endX:" + endPoint.getX() + 
+				",endY:" + endPoint.getY() + ",selected:" + this.isSelected() +	",color:" + this.getColor().getRGB();
+		
 	}
 	
 	public Line clone() {

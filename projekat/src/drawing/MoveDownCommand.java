@@ -25,7 +25,7 @@ public class MoveDownCommand implements Command {
 
 	@Override
 	public String toString() {
-		return "MoveUpCommand [pnlDrawing=" + pnlDrawing + ", index=" + index + "]";
+		return "Move Up " + pnlDrawing + ", index = " + index + "]";
 	}
 
 }

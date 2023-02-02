@@ -45,8 +45,8 @@ public class UpdateHexagonCommand implements Command{
 
 	@Override
 	public String toString() {
-		return "UpdateHexagonCommand [newHexagon=" + newHexagon + ", oldHexagon=" + oldHexagon + ", originalHexagon="
-				+ originalHexagon + "]";
+		return "Update Hexagon: (newHexagon=" + newHexagon + ", oldHexagon=" + oldHexagon + ", originalHexagon="
+				+ originalHexagon + ")";
 	}
 	
 	

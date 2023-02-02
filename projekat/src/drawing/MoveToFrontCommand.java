@@ -29,7 +29,7 @@ public class MoveToFrontCommand implements Command{
 
 	@Override
 	public String toString() {
-		return "MoveToFrontCommand [pnlDrawing=" + pnlDrawing + ", index=" + index + "]";
+		return "MoveToFront," + index;
 	}
 	
 	

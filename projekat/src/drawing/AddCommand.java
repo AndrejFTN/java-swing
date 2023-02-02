@@ -30,7 +30,7 @@ public class AddCommand implements Command {
 
 	@Override
 	public String toString() {
-		return "add_" + shape.toString();
+		return "Add," + shape.toString();
 	}
 	
 }

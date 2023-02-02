@@ -23,7 +23,7 @@ public class Circle extends SurfaceShape{
 	public Circle(Point center , int radius , boolean selected) {
 		this (center , radius);
 		setSelected(selected);
-		//this.selected = selected;
+		
 	}
 	
 	public Circle(Point center, int radius, boolean selected, Color color) {
@@ -59,7 +59,7 @@ public class Circle extends SurfaceShape{
 	
 	public boolean contains(int x , int y) {
 		return center.distance(x, y) <= radius;
-		//Da li je duzina linije od centra do prosledjene tacke manja od poluprecnika?
+		
 	}
 	
 	public boolean contains(Point p) {
@@ -102,7 +102,7 @@ public class Circle extends SurfaceShape{
 	
 	@Override
 	public int compareTo(Object o) {
-		//Poredimo povrsine
+		
 		if(o instanceof Circle) {
 			return (int)(this.area() - ((Circle)o).area());
 		}
@@ -129,7 +129,9 @@ public class Circle extends SurfaceShape{
 	}
 	
 	public String toString() {
-		return "Center : " + center + " , radius = " + radius;
+		return "Circle,x:" + center.getX() + ",y:" + center.getY() + ",Radius:" + this.radius + 
+				",Selected:" + this.isSelected() +	",Color:" + this.getColor().getRGB() + ",InnerColor:" + this.getInnerColor().getRGB();
+		
 	}
 
 	public Circle clone() {

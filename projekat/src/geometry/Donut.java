@@ -7,7 +7,6 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 
 public class Donut extends Circle {
-	//extends , kljucna rec za nadredjenu klasu
 	private int innerRadius;
 	
 	public Donut() {
@@ -15,11 +14,7 @@ public class Donut extends Circle {
 	}
 	
 	public Donut(Point center , int radius, int innerRadius) {
-		//this.center = center; // Mozemo ovo uraditi jer je u circle center Protected
-		//setRadius(radius); //Moramo preko set , radius je private unutar circle
-		//Pomocu super , pozivamo konstruktor iz nadredjene klase (circle) i
 		super(center, radius);  
-		//ne moramo imati ove dve naredbe gore.
 		this.innerRadius = innerRadius;
 	}
 	
@@ -40,8 +35,6 @@ public class Donut extends Circle {
 	
 	public double area() {
 		return super.area() - innerRadius * innerRadius * Math.PI;
-		//super ovde poziva metodu area() unutar nadredjenje klase (circle)
-		//((Ne moramo ponovo pisati radius * radius * math.Pi..))
 	}
 	
 	public boolean equals(Object obj) {
@@ -66,11 +59,9 @@ public class Donut extends Circle {
 		return dFromCenter > innerRadius && super.contains(p.getX(),p.getY()); 
 	}
 	
-	@Override //Bez obzira sto Donut extenduje Circle (tj. Circle ima draw), nisu identicni oblici , moramo redefinisati metodu draw za Donut
+	@Override 
 	public void draw(Graphics g) {
 		 
-		g.setColor(getColor()); //Ovo boji krug da bude izabrane boje posto ostaje plava boja iz kvadrata koji se crta oko tacki unutar Draw (u Circle)
-		g.drawOval(this.getCenter().getX() - innerRadius, this.getCenter().getY() - innerRadius, innerRadius * 2, innerRadius * 2);
 		
 		Ellipse2D eIner=new Ellipse2D.Float(getCenter().getX()-innerRadius,getCenter().getY()- innerRadius,2* innerRadius,2* innerRadius);
 		Ellipse2D eOuter=new Ellipse2D.Float(getCenter().getX()-getRadius(),getCenter().getY()- getRadius(),2* getRadius(),2* getRadius());
@@ -80,6 +71,11 @@ public class Donut extends Circle {
 		
 		g.setColor(getInnerColor());
 		((Graphics2D) g).fill(outer);
+		
+		g.setColor(getColor()); 
+		g.drawOval(this.getCenter().getX() - innerRadius, this.getCenter().getY() - innerRadius, innerRadius * 2, innerRadius * 2);
+		
+		
 		
 		if(isSelected()) {
 			g.setColor(Color.BLUE);
@@ -100,7 +96,6 @@ public class Donut extends Circle {
 	
 	@Override
 	public int compareTo(Object o) {
-		//Poredimo povrsine kao krug , ali razlika je u kojoj area metodi pozivamo (ova definisana u donutu je dobra)
 		if(o instanceof Donut) {
 			return (int)(this.area() - ((Donut)o).area());
 		}
@@ -116,7 +111,8 @@ public class Donut extends Circle {
 	}
 	
 	public String toString() {
-		return super.toString() + ", innerRadius = " + innerRadius;
+		 return "Donut,x:" + getCenter().getX() + ",y:" + getCenter().getY() + ",Radius:" + getRadius() + 
+				",innerRadius:" + this.innerRadius + ",Selected:" + isSelected() +	",Color:" + this.getColor().getRGB() + ",InnerColor:" + this.getInnerColor().getRGB();
 	}
 	
 	public Donut clone() {

@@ -6,7 +6,6 @@ import java.awt.Graphics;
 public class Point extends Shape{
 	private int x;
 	private int y;
-	//Posto prosirujemo sa Shape , mozemo obrisati selected , i metode pristupa selectedu
 	public Point() {
 		
 	}
@@ -17,7 +16,6 @@ public class Point extends Shape{
 	}
 
 	public Point(int x , int y , boolean selected) {
-		//this.x = x; ali nema potrebe posto su definisani u proslom konstruktoru..
 		this (x , y);
 		this.setSelected(selected);
 	}
@@ -55,11 +53,11 @@ public class Point extends Shape{
 		return this.distance(x, y) <= 2;
 	}
 	
-	@Override //Generisanje : Desni klik -> Source -> Override methods
+	@Override 
 	public void draw(Graphics g) {
 		
 		g.setColor(getColor());
-		g.drawLine(this.x - 2, this.y, this.x + 2, this.y); // y se ne menja po horizontali, samo x se menja
+		g.drawLine(this.x - 2, this.y, this.x + 2, this.y); 
 		g.drawLine(this.x, this.y - 2, this.x, this.y + 2);
 		if(isSelected()) {
 			g.setColor(Color.BLUE);
@@ -71,21 +69,19 @@ public class Point extends Shape{
 	@Override
 	public void moveTo(int x, int y) {
 		this.x = x;
-		this.y = y; //Pomeri NA koordinate.
+		this.y = y; 
 	}
 
 	@Override
 	public void moveBy(int byX, int byY) {
 		this.x = this.x + byX;
-		this.y += byY; //Pomeri ZA koordinate
+		this.y += byY; 
 	}
 	
 	@Override
 	public int compareTo(Object o) {
-		//Poredimo distancu tacaka od koordinatnog pocetka
 		if(o instanceof Point) {
 			return (int)(this.distance(0, 0) - ((Point)o).distance(0, 0));
-			//Konvertujemo OBJ u Point , isto tako double u int.
 		}
 		
 		return 0;
@@ -108,7 +104,9 @@ public class Point extends Shape{
 	}
 	
 	public String toString() {
-		return "(" + x +  " , " + y + ")";
+		return "Point,x:" + getX() + ",y:" + getY() + 
+				",selected:" + this.isSelected() +	",color:" + this.getColor().getRGB();
+		
 	}
 	
 	@Override

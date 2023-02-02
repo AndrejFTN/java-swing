@@ -11,8 +11,6 @@ public class Hexagon extends SurfaceShape{
 	private hexagon.Hexagon hexagon;
 	
 	
-	//problem oko kastovanja, ostali konstruktori promenjeni na double kao i metoda clone
-	//ali prvi konstruktor sa ugradjenom metodom trazi int, da li ce biti problema
 	public Hexagon() {
 		
 	}
@@ -24,7 +22,7 @@ public class Hexagon extends SurfaceShape{
 	
 	public Hexagon(Point center, int radius, Color color) {
 		this(center, radius);
-		this.hexagon.setBorderColor(color);
+		setColor(color);
 	}
 	
 	public Hexagon(Point center, int radius, boolean selected, Color color) {
@@ -34,12 +32,12 @@ public class Hexagon extends SurfaceShape{
 	
 	public Hexagon(Point center, int radius, boolean selected, Color color, Color innerColor) {
 		this(center, radius, selected, color);
-		this.hexagon.setAreaColor(innerColor);
+		setInnerColor(innerColor);
 	}
 	
 	public double area() {
 		return ((3 * Math.sqrt(3) *
-                (this.hexagon.getR() * this.hexagon.getR())) / 2); //zato sto je r = stranici u pravilnom hexagonu?
+                (this.hexagon.getR() * this.hexagon.getR())) / 2); 
 	}
 	
 	public double circumference() {
@@ -122,7 +120,11 @@ public class Hexagon extends SurfaceShape{
 	@Override
 	public void draw(Graphics g) {
 		
+		this.hexagon.setBorderColor(getColor());
+		this.hexagon.setAreaColor(getInnerColor());
+		
 		this.hexagon.paint(g);
+
 		
 		/*Polygon polygon = new Polygon();
 		g.setColor(getColor());
@@ -195,7 +197,9 @@ public class Hexagon extends SurfaceShape{
 
 	@Override
 	public String toString() {
-		return "Hexagon [point=" + this.getCenter() + ", radius=" + this.hexagon.getR() + "]";
+		return "Hexagon,x:" + hexagon.getX() + ",y:" + hexagon.getY() + ",radius:" + hexagon.getR() + 
+				",selected:" + this.isSelected() +	",color:" + this.getColor().getRGB() + ",innerColor:" + this.getInnerColor().getRGB();
+		
 	}
 
 	public Hexagon clone() {

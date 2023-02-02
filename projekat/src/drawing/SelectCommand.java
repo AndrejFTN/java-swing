@@ -22,4 +22,8 @@ public class SelectCommand implements Command {
 		
 	}
 	
+	public String toString() {
+		return "Select," + shape.toString();
+	}
+	
 }

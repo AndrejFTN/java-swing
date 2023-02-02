@@ -14,19 +14,19 @@ public class MoveUpCommand implements Command{
 	
 	@Override
 	public void Do() {
-		pnlDrawing.swapShapes(index, index + 1); // - za move down
+		pnlDrawing.swapShapes(index, index + 1); 
 		
 	}
 
 	@Override
 	public void Undo() {
-		pnlDrawing.swapShapes(index, index + 1); // -
+		pnlDrawing.swapShapes(index, index + 1); 
 	}
 
 
 	@Override
 	public String toString() {
-		return "MoveUpCommand [pnlDrawing=" + pnlDrawing + ", index=" + index + "]";
+		return "MoveUp," + index;
 	}
 
 	

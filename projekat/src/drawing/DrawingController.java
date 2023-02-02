@@ -1,8 +1,11 @@
 package drawing;
 
+import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -31,6 +34,8 @@ public class DrawingController extends Observable{
 	
 	private DrawingModel drawingModel = new DrawingModel();
 	private FrmDrawing frmDrawing;
+	
+	private ArrayList<String> listLogCommand = new ArrayList<String>();
 	
 	public DrawingController(PnlDrawing pnlDrawing, FrmDrawing frmDrawing) {
 		this.pnlDrawing = pnlDrawing;
@@ -441,6 +446,356 @@ public class DrawingController extends Observable{
 		this.saveStrategy.setSaver(new SaveLog(frmDrawing.getDefaultListModel()));
 		this.filePath = saveStrategy.saveAs();
 	}
-	//Struktura stringova: Komanda/Oblik\karakteristike oblika; \/ = separatori
-	// Draw Circle radius=10 color=red innercolor=blue
+
+	public void readLog() {
+		JFileChooser jFileChooser = new JFileChooser(new File("D:\\"));
+		jFileChooser.setDialogTitle("Choose file");
+		int response = jFileChooser.showOpenDialog(null);
+		if(response == JFileChooser.APPROVE_OPTION) {
+			this.filePath = jFileChooser.getSelectedFile().getAbsolutePath();
+			try {
+				BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
+				String line;
+				while((line = bufferedReader.readLine()) != null) {
+					listLogCommand.add(line);
+				}
+				
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+			} 
+		}
+		
+	}
+
+	public void loadLog() {
+		String log = listLogCommand.get(0);
+		System.out.println(log);
+		String[] logParts = log.split(",");
+		String commandName = logParts[0];
+		System.out.print(commandName);
+		if(commandName.equals("Add")) {
+			String shapeName = logParts[1];
+			if(shapeName.equals("Rectangle")) {
+				String xPart = logParts[2];
+				String[] xCoordinate =  xPart.split(":");
+				int x = Integer.parseInt(xCoordinate[1]);
+				
+				String yPart = logParts[3];
+				String[] yCoordinate = yPart.split(":");
+				int y = Integer.parseInt(yCoordinate[1]);
+				
+				String heightPart = logParts[4];
+				String[] heightShape = heightPart.split(":");
+				int height = Integer.parseInt(heightShape[1]);
+				
+				String widthPart = logParts[5];
+				String[] widthShape = widthPart.split(":");
+				int width = Integer.parseInt(widthShape[1]);
+				
+				String colorPart = logParts[6];
+				String[] colorShape = colorPart.split(":");
+				Color color = new Color(Integer.parseInt(colorShape[1]));
+				
+				String innerColorPart = logParts[7];
+				String[] innerColorShape = innerColorPart.split(":");
+				Color innerColor = new Color(Integer.parseInt(innerColorShape[1]));
+				
+				String selectedPart = logParts[8];
+				String[] selectShape = selectedPart.split(":");
+				boolean select = Boolean.parseBoolean(selectShape[1]);
+				
+				Rectangle rectangle = new Rectangle(new Point(x,y), width, height, select, color, innerColor);
+				AddCommand cmd = new AddCommand(rectangle, pnlDrawing);
+				cmd.Do();
+				informObservers();
+				frmDrawing.addLog(cmd.toString());
+				drawingModel.getUndoCommands().add(cmd);	
+				pnlDrawing.repaint();
+
+			}else if(shapeName.equals("Circle")) {
+				
+				String xPart = logParts[2];
+				String[] xCoordinate = xPart.split(":");
+				int x = Integer.parseInt(xCoordinate[1]);
+				
+				String yPart = logParts[3];
+				String[] yCoordinate = yPart.split(":");
+				int y = Integer.parseInt(yCoordinate[1]);
+				
+				String radiusPart = logParts[4];
+				String[] radiusShape = radiusPart.split(":");
+				int radius = Integer.parseInt(radiusShape[1]);
+				
+				String selectedPart = logParts[5];
+				String[] selectedShape = selectedPart.split(":");
+				boolean select = Boolean.parseBoolean(selectedShape[1]);
+				
+				String colorPart = logParts[6];
+				String[] colorShape = colorPart.split(":");
+				Color color = new Color(Integer.parseInt(colorShape[1]));
+				
+				String innerColorPart = logParts[7];
+				String[] innerColorShape = innerColorPart.split(":");
+				Color innerColor = new Color(Integer.parseInt(innerColorShape[1]));
+				
+				Circle circle = new Circle(new Point(x,y), radius, select, color, innerColor);
+				AddCommand cmd = new AddCommand(circle, pnlDrawing);
+				cmd.Do();
+				informObservers();
+				frmDrawing.addLog(cmd.toString());
+				drawingModel.getUndoCommands().add(cmd);	
+				pnlDrawing.repaint();
+				
+			} else if(shapeName.equals("Donut")) {
+				
+				// PROBLEM KOD DONUTA, STRING I CRTANJE UNUTRASNJE LINIJE
+				String xPart = logParts[2];
+				String[] xCoordinate = xPart.split(":");
+				int x = Integer.parseInt(xCoordinate[1]);
+				
+				String yPart = logParts[3];
+				String[] yCoordinate = yPart.split(":");
+				int y = Integer.parseInt(yCoordinate[1]);
+				
+				String radiusPart = logParts[4];
+				String[] radiusShape = radiusPart.split(":");
+				int radius = Integer.parseInt(radiusShape[1]);
+				
+				String innerRadiusPart = logParts[5];
+				String[] innerRadiusShape = innerRadiusPart.split(":");
+				int innerRadius = Integer.parseInt(innerRadiusShape[1]);
+				
+				String selectedPart = logParts[6];
+				String[] selectedShape = selectedPart.split(":");
+				boolean select = Boolean.parseBoolean(selectedShape[1]);
+				
+				String colorPart = logParts[7];
+				String[] colorShape = colorPart.split(":");
+				Color color = new Color(Integer.parseInt(colorShape[1]));
+				
+				String innerColorPart = logParts[8];
+				String[] innerColorShape = innerColorPart.split(":");
+				Color innerColor = new Color(Integer.parseInt(innerColorShape[1]));
+				
+			
+				
+				Donut donut = new Donut(new Point(x,y), radius, innerRadius, select, color, innerColor);
+				AddCommand cmd = new AddCommand(donut, pnlDrawing);
+				cmd.Do();
+				informObservers();
+				frmDrawing.addLog(cmd.toString());
+				drawingModel.getUndoCommands().add(cmd);	
+				pnlDrawing.repaint();
+				
+			} else if(shapeName.equals("Hexagon")) {
+				
+				String xPart = logParts[2];
+				String[] xCoordinate = xPart.split(":");
+				int x = Integer.parseInt(xCoordinate[1]);
+				
+				String yPart = logParts[3];
+				String[] yCoordinate = yPart.split(":");
+				int y = Integer.parseInt(yCoordinate[1]);
+				
+				String radiusPart = logParts[4];
+				String[] radiusShape = radiusPart.split(":");
+				int radius = Integer.parseInt(radiusShape[1]);
+				
+				String selectedPart = logParts[5];
+				String[] selectedShape = selectedPart.split(":");
+				boolean select = Boolean.parseBoolean(selectedShape[1]);
+				
+				String colorPart = logParts[6];
+				String[] colorShape = colorPart.split(":");
+				Color color = new Color(Integer.parseInt(colorShape[1]));
+				
+				String innerColorPart = logParts[7];
+				String[] innerColorShape = innerColorPart.split(":");
+				Color innerColor = new Color(Integer.parseInt(innerColorShape[1]));
+				
+				Hexagon hexagon = new Hexagon(new Point(x,y), radius, select, color, innerColor);
+				AddCommand cmd = new AddCommand(hexagon, pnlDrawing);
+				cmd.Do();
+				informObservers();
+				frmDrawing.addLog(cmd.toString());
+				drawingModel.getUndoCommands().add(cmd);	
+				pnlDrawing.repaint();
+				
+			} else if(shapeName.equals("Line")) {
+				
+				String xStartPart = logParts[2];
+				String[] xCoordinate = xStartPart.split(":");
+				int startX = Integer.parseInt(xCoordinate[1]);
+				
+				String yStartPart = logParts[3];
+				String[] yCoordinate = yStartPart.split(":");
+				int startY = Integer.parseInt(yCoordinate[1]);
+				
+				String xEndPart = logParts[4];
+				String[] xEndCoordinate = xEndPart.split(":");
+				int endX = Integer.parseInt(xEndCoordinate[1]);
+				
+				String yEndPart = logParts[5];
+				String[] yEndCoordinate = yEndPart.split(":");
+				int endY = Integer.parseInt(yEndCoordinate[1]);
+				
+				String selectedPart = logParts[6];
+				String[] selectedShape = selectedPart.split(":");
+				boolean select = Boolean.parseBoolean(selectedShape[1]);
+				
+				String colorPart = logParts[7];
+				String[] colorShape = colorPart.split(":");
+				Color color = new Color(Integer.parseInt(colorShape[1]));
+				
+				Line line = new Line(new Point(startX,startY), new Point(endX, endY), select, color);
+				AddCommand cmd = new AddCommand(line, pnlDrawing);
+				cmd.Do();
+				informObservers();
+				frmDrawing.addLog(cmd.toString());
+				drawingModel.getUndoCommands().add(cmd);	
+				pnlDrawing.repaint();
+				
+			} else if(shapeName.equals("Point")) {
+				
+				String xPart = logParts[2];
+				String[] xCoordinate = xPart.split(":");
+				int x = Integer.parseInt(xCoordinate[1]);
+				
+				String yPart = logParts[3];
+				String[] yCoordinate = yPart.split(":");
+				int y = Integer.parseInt(yCoordinate[1]);
+				
+				String selectedPart = logParts[4];
+				String[] selectedShape = selectedPart.split(":");
+				boolean select = Boolean.parseBoolean(selectedShape[1]);
+				
+				String colorPart = logParts[5];
+				String[] colorShape = colorPart.split(":");
+				Color color = new Color(Integer.parseInt(colorShape[1]));
+				
+				Point point = new Point(x,y, select, color);
+				AddCommand cmd = new AddCommand(point, pnlDrawing);
+				cmd.Do();
+				informObservers();
+				frmDrawing.addLog(cmd.toString());
+				drawingModel.getUndoCommands().add(cmd);	
+				pnlDrawing.repaint();
+			}
+			
+		}else if(commandName.equals("Update")) {
+			String shapeName = logParts[1];
+			if(shapeName.equals("Point")) {
+				String xPart = logParts[2];
+				String[] xCoordinate = xPart.split(":");
+				int x = Integer.parseInt(xCoordinate[1]);
+				
+				String yPart = logParts[3];
+				String[] yCoordinate = yPart.split(":");
+				int y = Integer.parseInt(yCoordinate[1]);
+				
+				String selectedPart = logParts[4];
+				String[] selectedShape = selectedPart.split(":");
+				boolean select = Boolean.parseBoolean(selectedShape[1]);
+				
+				String colorPart = logParts[5];
+				String[] colorShape = colorPart.split(":");
+				Color color = new Color(Integer.parseInt(colorShape[1]));
+				
+				String xPart2 = logParts[6];
+				String[] xCoordinate2 = xPart2.split(":");
+				int x2 = Integer.parseInt(xCoordinate2[1]);
+				
+				String yPart2 = logParts[7];
+				String[] yCoordinate2 = yPart2.split(":");
+				int y2 = Integer.parseInt(yCoordinate2[1]);
+				
+				String selectedPart2 = logParts[8];
+				String[] selectedShape2 = selectedPart2.split(":");
+				boolean select2 = Boolean.parseBoolean(selectedShape2[1]);
+				
+				String colorPart2 = logParts[9];
+				String[] colorShape2 = colorPart2.split(":");
+				Color color2 = new Color(Integer.parseInt(colorShape2[1]));
+				
+				Point point = new Point(x,y, select, color);
+				Point point2 = new Point(x2, y2, select2, color2);
+				
+				Point placeholder = null;
+				for(Shape shape : pnlDrawing.getShapes()) {
+					if(shape instanceof Point && ((Point)shape).equals(point)){
+						placeholder = (Point)shape;
+					}
+				}
+				UpdatePointCommand cmd = new UpdatePointCommand(placeholder,point2);
+				cmd.Do();
+				informObservers();
+				frmDrawing.addLog(cmd.toString());
+				drawingModel.getUndoCommands().add(cmd);	
+				pnlDrawing.repaint();
+			}
+		}else if(commandName.equals("MoveUp")) {
+			int index = Integer.parseInt(logParts[1]);
+			MoveUpCommand cmd = new MoveUpCommand(pnlDrawing, index);
+			cmd.Do();
+			informObservers();
+			frmDrawing.addLog(cmd.toString());
+			drawingModel.getUndoCommands().add(cmd);	
+			pnlDrawing.repaint();
+		}else if(commandName.equals("MoveToFront")) {
+			int index = Integer.parseInt(logParts[1]);
+			MoveToFrontCommand cmd = new MoveToFrontCommand(pnlDrawing, index);
+			cmd.Do();
+			informObservers();
+			frmDrawing.addLog(cmd.toString());
+			drawingModel.getUndoCommands().add(cmd);	
+			pnlDrawing.repaint();
+		}else if(commandName.equals("Select")) {
+			String shapeName = logParts[1];
+			if(shapeName.equals("Rectangle")) {
+				String xPart = logParts[2];
+				String[] xCoordinate =  xPart.split(":");
+				int x = Integer.parseInt(xCoordinate[1]);
+				
+				String yPart = logParts[3];
+				String[] yCoordinate = yPart.split(":");
+				int y = Integer.parseInt(yCoordinate[1]);
+				
+				String heightPart = logParts[4];
+				String[] heightShape = heightPart.split(":");
+				int height = Integer.parseInt(heightShape[1]);
+				
+				String widthPart = logParts[5];
+				String[] widthShape = widthPart.split(":");
+				int width = Integer.parseInt(widthShape[1]);
+				
+				String colorPart = logParts[6];
+				String[] colorShape = colorPart.split(":");
+				Color color = new Color(Integer.parseInt(colorShape[1]));
+				
+				String innerColorPart = logParts[7];
+				String[] innerColorShape = innerColorPart.split(":");
+				Color innerColor = new Color(Integer.parseInt(innerColorShape[1]));
+				
+				String selectedPart = logParts[8];
+				String[] selectShape = selectedPart.split(":");
+				boolean select = Boolean.parseBoolean(selectShape[1]);
+				
+				Rectangle rectangle = new Rectangle(new Point(x,y), width, height, select, color, innerColor);
+				
+				Rectangle placeholder = null;
+				for(Shape shape : pnlDrawing.getShapes()) {
+					if(shape instanceof Rectangle && ((Rectangle)shape).equals(rectangle)){
+						placeholder = (Rectangle)shape;
+					}
+				}
+				SelectCommand cmd = new SelectCommand(placeholder);
+				cmd.Do();
+				informObservers();
+				frmDrawing.addLog(cmd.toString());
+				drawingModel.getUndoCommands().add(cmd);	
+				pnlDrawing.repaint();
+			}
+		}
+		listLogCommand.remove(0);
+	}
 }

@@ -41,8 +41,8 @@ public class UpdateRectangleCommand implements Command {
 
 	@Override
 	public String toString() {
-		return "UpdateRectangleCommand [oldRectangle=" + oldRectangle + ", newRectangle=" + newRectangle
-				+ ", originalRectangle=" + originalRectangle + "]";
+		return "Update Rectangle: (oldRectangle=" + oldRectangle + ", newRectangle=" + newRectangle
+				+ ", originalRectangle=" + originalRectangle + ")";
 	}
 
 }

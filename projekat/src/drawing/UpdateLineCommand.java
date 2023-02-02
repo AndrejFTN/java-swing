@@ -40,8 +40,8 @@ public class UpdateLineCommand implements Command {
 
 	@Override
 	public String toString() {
-		return "UpdateLineCommand [newLine=" + newLine + ", oldLine=" + oldLine + ", originalLine=" + originalLine
-				+ "]";
+		return "Update Line: (newLine=" + newLine + ", oldLine=" + oldLine + ", originalLine=" + originalLine
+				+ ")";
 	}
 
 	

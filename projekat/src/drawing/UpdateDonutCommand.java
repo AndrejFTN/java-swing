@@ -38,8 +38,8 @@ public class UpdateDonutCommand implements Command{
 
 	@Override
 	public String toString() {
-		return "UpdateDonutCommand [newDonut=" + newDonut + ", originalDonut=" + originalDonut + ", oldDonut="
-				+ oldDonut + "]";
+		return "Update Donut: (newDonut=" + newDonut + ", originalDonut=" + originalDonut + ", oldDonut="
+				+ oldDonut + ")";
 	}
 	
 	

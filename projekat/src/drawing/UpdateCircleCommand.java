@@ -46,8 +46,8 @@ public class UpdateCircleCommand implements Command{
 
 	@Override
 	public String toString() {
-		return "UpdateCircleCommand [newCircle=" + newCircle + ", oldCircle=" + oldCircle + ", originalCircle="
-				+ originalCircle + "]";
+		return "Update Circle: (newCircle = " + newCircle + ", oldCircle=" + oldCircle + ", originalCircle="
+				+ originalCircle + ")";
 	}
 
 	
