@@ -45,8 +45,10 @@ public class UpdateHexagonCommand implements Command{
 
 	@Override
 	public String toString() {
-		return "Update Hexagon: (newHexagon=" + newHexagon + ", oldHexagon=" + oldHexagon + ", originalHexagon="
-				+ originalHexagon + ")";
+		return "Update,Hexagon,x:" + originalHexagon.getCenter().getX() + ",y:" + originalHexagon.getCenter().getY() + ",radius:" + originalHexagon.getRadius() + 
+				",selected:" + originalHexagon.isSelected() +	",color:" + originalHexagon.getColor().getRGB() + ",innerColor:" + originalHexagon.getInnerColor().getRGB()
+				+ "NewHexagon x:" + newHexagon.getCenter().getX() + ",y:" + newHexagon.getCenter().getY() + ",radius:" + newHexagon.getRadius() + 
+				",selected:" + newHexagon.isSelected() +	",color:" + newHexagon.getColor().getRGB() + ",innerColor:" + newHexagon.getInnerColor().getRGB();
 	}
 	
 	

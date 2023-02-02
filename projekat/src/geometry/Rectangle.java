@@ -89,7 +89,7 @@ public class Rectangle extends SurfaceShape{
 		g.fillRect(this.upperLeftPoint.getX() + 1, this.upperLeftPoint.getY() + 1, this.width - 1, this.height - 1);
 	}
 	
-	//Overloading metode , isto ime , ali drugaciji tip podatka (= potpis metode)
+	
 	public boolean contains(Point p) {
 		if(p.getX() >= upperLeftPoint.getX() && p.getX() <= (upperLeftPoint.getX() + width)
 				&& p.getY() >= upperLeftPoint.getY() && p.getY() <= (upperLeftPoint.getY() + height))
@@ -112,7 +112,7 @@ public class Rectangle extends SurfaceShape{
 	
 	@Override
 	public int compareTo(Object o) {
-		//Poredimo povrsine
+		
 		if(o instanceof Rectangle) {
 			return this.area() - ((Rectangle)o).area();
 		}

@@ -41,8 +41,10 @@ public class UpdateRectangleCommand implements Command {
 
 	@Override
 	public String toString() {
-		return "Update Rectangle: (oldRectangle=" + oldRectangle + ", newRectangle=" + newRectangle
-				+ ", originalRectangle=" + originalRectangle + ")";
+		return "Update,Rectangle,x:" + originalRectangle.getUpperLeftPoint().getX() + ",y:" + originalRectangle.getUpperLeftPoint().getY() + ",height:" + originalRectangle.getHeight() + 
+				",width:" + originalRectangle.getWidth() + ",color:" + originalRectangle.getColor().getRGB() + ",innerColor:" + originalRectangle.getInnerColor().getRGB() + ",selected:" + originalRectangle.isSelected()
+				+ ",NewRectangle x:" + newRectangle.getUpperLeftPoint().getX() + ",y:" + newRectangle.getUpperLeftPoint().getY() + ",height:" + newRectangle.getHeight() + 
+				",width:" + newRectangle.getWidth() + ",color:" + newRectangle.getColor().getRGB() + ",innerColor:" + newRectangle.getInnerColor().getRGB() + ",selected:" + newRectangle.isSelected();
 	}
 
 }

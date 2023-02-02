@@ -29,7 +29,7 @@ public class MoveToBottomCommand implements Command {
 
 	@Override
 	public String toString() {
-		return "MoveToBottomCommand [pnlDrawing=" + pnlDrawing + ", index=" + index + "]";
+		return "MoveToBottom," + index;
 	}
 	
 }

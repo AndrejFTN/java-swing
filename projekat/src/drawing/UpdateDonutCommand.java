@@ -38,8 +38,10 @@ public class UpdateDonutCommand implements Command{
 
 	@Override
 	public String toString() {
-		return "Update Donut: (newDonut=" + newDonut + ", originalDonut=" + originalDonut + ", oldDonut="
-				+ oldDonut + ")";
+		return "Update,Donut,x:" + originalDonut.getCenter().getX() + ",y:" + originalDonut.getCenter().getY() + ",Radius:" + originalDonut.getRadius() + 
+				",innerRadius:" + originalDonut.getInnerRadius() + ",Selected:" + originalDonut.isSelected() +	",Color:" + originalDonut.getColor().getRGB() + ",InnerColor:" + originalDonut.getInnerColor().getRGB()
+				+ ",NewDonut x:" + newDonut.getCenter().getX() + ",y:" + newDonut.getCenter().getY() + ",Radius:" + newDonut.getRadius() + 
+				",innerRadius:" + newDonut.getInnerRadius() + ",Selected:" + newDonut.isSelected() +	",Color:" + newDonut.getColor().getRGB() + ",InnerColor:" + newDonut.getInnerColor().getRGB();
 	}
 	
 	

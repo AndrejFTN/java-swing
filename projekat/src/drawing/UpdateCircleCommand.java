@@ -46,8 +46,10 @@ public class UpdateCircleCommand implements Command{
 
 	@Override
 	public String toString() {
-		return "Update Circle: (newCircle = " + newCircle + ", oldCircle=" + oldCircle + ", originalCircle="
-				+ originalCircle + ")";
+		return "Update,Circle,x:" + originalCircle.getCenter().getX() + ",y:" + originalCircle.getCenter().getY() + ",Radius:" + originalCircle.getRadius() + 
+				",Selected:" + originalCircle.isSelected() + ",Color:" + originalCircle.getColor().getRGB() + ",InnerColor:" + originalCircle.getInnerColor().getRGB()
+				+ ",NewCircle x:" + newCircle.getCenter().getX() + ",y:" + newCircle.getCenter().getY() + ",Radius:" + newCircle.getRadius() + 
+				",Selected:" + newCircle.isSelected() + ",Color:" + newCircle.getColor().getRGB() + ",InnerColor:" + newCircle.getInnerColor().getRGB();
 	}
 
 	

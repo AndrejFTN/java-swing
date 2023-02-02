@@ -40,8 +40,10 @@ public class UpdateLineCommand implements Command {
 
 	@Override
 	public String toString() {
-		return "Update Line: (newLine=" + newLine + ", oldLine=" + oldLine + ", originalLine=" + originalLine
-				+ ")";
+		return "Update,Line,Startx:" + originalLine.getStartPoint().getX() + ",StartY:" + originalLine.getStartPoint().getY() + ",endX:" + originalLine.getEndPoint().getX() + 
+				",endY:" + originalLine.getEndPoint().getY() + ",selected:" + originalLine.isSelected() +	",color:" + originalLine.getColor().getRGB()
+				+ ",NewLine Startx:" + newLine.getStartPoint().getX() + ",StartY:" + newLine.getStartPoint().getY() + ",endX:" + newLine.getEndPoint().getX() + 
+				",endY:" + newLine.getEndPoint().getY() + ",selected:" + newLine.isSelected() +	",color:" + newLine.getColor().getRGB();
 	}
 
 	
