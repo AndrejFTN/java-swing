@@ -21,7 +21,7 @@ public class UpdateDonutCommand implements Command{
 		//oldDonut.setRadius(newDonut.getRadius());
 		oldDonut.setInnerColor(newDonut.getInnerColor());
 		oldDonut.setInnerRadius(newDonut.getInnerRadius());
-		oldDonut.setSelected(newDonut.isSelected());
+		oldDonut.setSelected(true);
 		oldDonut.setColor(newDonut.getColor());
 	}
 
@@ -32,7 +32,7 @@ public class UpdateDonutCommand implements Command{
 		//oldDonut.setRadius(newDonut.getRadius());
 		oldDonut.setInnerColor(originalDonut.getInnerColor());
 		oldDonut.setInnerRadius(originalDonut.getInnerRadius());
-		oldDonut.setSelected(originalDonut.isSelected());
+		oldDonut.setSelected(true);
 		oldDonut.setColor(originalDonut.getColor());
 	}
 

@@ -167,8 +167,17 @@ public class Hexagon extends SurfaceShape{
         }
 	}
 	
-	
-	
+	public boolean equals(Object obj) {
+		if(obj instanceof Hexagon) {
+			Hexagon pomocna = (Hexagon)obj;
+			if(this.hexagon.getX() == pomocna.getCenter().getX() && this.hexagon.getY() == pomocna.getCenter().getY() && this.hexagon.getR() == pomocna.getRadius())
+				return true;
+			else
+				return false;
+		}else
+			return false;
+		
+	}
 	
 	@Override
 	public void fill(Graphics g) {

@@ -21,7 +21,7 @@ public class UpdatePointCommand implements Command {
 		oldPoint.setX(newPoint.getX());
 		oldPoint.setY(newPoint.getY());
 		oldPoint.setColor(newPoint.getColor());
-		oldPoint.setSelected(newPoint.isSelected());
+		oldPoint.setSelected(true);
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class UpdatePointCommand implements Command {
 		oldPoint.setX(pointOriginal.getX());
 		oldPoint.setY(pointOriginal.getY());
 		oldPoint.setColor(pointOriginal.getColor());
-		oldPoint.setSelected(pointOriginal.isSelected());
+		oldPoint.setSelected(true);
 		
 	}
 

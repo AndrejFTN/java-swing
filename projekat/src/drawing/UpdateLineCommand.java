@@ -34,7 +34,7 @@ public class UpdateLineCommand implements Command {
 		oldLine.setStartPoint(originalLine.getStartPoint());
 		oldLine.setEndPoint(originalLine.getEndPoint());
 		oldLine.setColor(originalLine.getColor());
-		oldLine.setSelected(originalLine.isSelected());
+		oldLine.setSelected(true);
 		
 	}
 

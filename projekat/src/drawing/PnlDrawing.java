@@ -95,4 +95,8 @@ public class PnlDrawing extends JPanel {
 	public void setShapes(ArrayList<Shape> shapes) {
 		this.shapes = shapes;
 	}
+	
+	public int getIndex(Shape shape) {
+		return this.shapes.indexOf(shape);
+	}
 }

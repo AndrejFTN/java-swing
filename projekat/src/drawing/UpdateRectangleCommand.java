@@ -24,7 +24,7 @@ public class UpdateRectangleCommand implements Command {
 		oldRectangle.setHeight(newRectangle.getHeight());
 		oldRectangle.setWidth(newRectangle.getWidth());
 		oldRectangle.setColor(newRectangle.getColor());
-		oldRectangle.setSelected(newRectangle.isSelected());
+		oldRectangle.setSelected(true);
 		oldRectangle.setInnerColor(newRectangle.getInnerColor());
 	}
 
@@ -34,7 +34,7 @@ public class UpdateRectangleCommand implements Command {
 		oldRectangle.setHeight(originalRectangle.getHeight());
 		oldRectangle.setWidth(originalRectangle.getWidth());
 		oldRectangle.setColor(originalRectangle.getColor());
-		oldRectangle.setSelected(originalRectangle.isSelected());
+		oldRectangle.setSelected(true);
 		oldRectangle.setInnerColor(originalRectangle.getInnerColor());
 		
 	}

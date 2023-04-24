@@ -25,7 +25,7 @@ public class UpdateHexagonCommand implements Command{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		oldHexagon.setSelected(newHexagon.isSelected());
+		oldHexagon.setSelected(true);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class UpdateHexagonCommand implements Command{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		oldHexagon.setSelected(originalHexagon.isSelected());
+		oldHexagon.setSelected(true);
 		
 	}
 

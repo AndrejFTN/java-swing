@@ -24,4 +24,16 @@ public class UnSelectCommand implements Command {
 			shapes.get(i).setSelected(true);
 		}
 	}
+	
+	public String toString() {
+		String placeholder = "";
+		
+		for(Shape shape : shapes) {
+			placeholder += shape.toString() + "|";
+			
+		}
+		
+		placeholder = placeholder.substring(0, placeholder.length()-1);
+		return "UnSelect,|" + placeholder;
+	}
 }

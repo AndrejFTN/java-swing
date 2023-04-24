@@ -25,7 +25,7 @@ public class UpdateCircleCommand implements Command{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		oldCircle.setSelected(newCircle.isSelected());
+		oldCircle.setSelected(true);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class UpdateCircleCommand implements Command{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		oldCircle.setSelected(originalCircle.isSelected());
+		oldCircle.setSelected(true);
 		
 	}
 
