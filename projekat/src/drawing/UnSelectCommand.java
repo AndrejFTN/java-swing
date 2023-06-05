@@ -29,7 +29,7 @@ public class UnSelectCommand implements Command {
 		String placeholder = "";
 		
 		for(Shape shape : shapes) {
-			placeholder += shape.toString() + "|";
+			placeholder += shape.toString() + "#";
 			
 		}
 		

@@ -441,7 +441,7 @@ public class FrmDrawing extends JFrame implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("Update");
+		
 		if(arg == null) {
 			return;
 		}
