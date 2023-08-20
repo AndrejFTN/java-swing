@@ -34,6 +34,6 @@ public class UnSelectCommand implements Command {
 		}
 		
 		placeholder = placeholder.substring(0, placeholder.length()-1);
-		return "UnSelect,|" + placeholder;
+		return "UnSelect,#" + placeholder;
 	}
 }

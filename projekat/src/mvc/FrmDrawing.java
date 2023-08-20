@@ -1,4 +1,4 @@
-package drawing;
+package mvc;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import drawing.ObserverMessage;
+
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -96,29 +99,9 @@ public class FrmDrawing extends JFrame implements Observer {
 	private final JMenuItem mntmSave = new JMenuItem("Save");
 	private final JButton btnLoadLog = new JButton("Load");
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FrmDrawing frame = new FrmDrawing();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
+	
 	public FrmDrawing() {
 		setTitle("Drawing");
-		this.drawingcontroller = new DrawingController(pnlDrawing, this);
-		this.drawingcontroller.addObserver(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 600);
 		setLocationRelativeTo(null);
@@ -217,7 +200,7 @@ public class FrmDrawing extends JFrame implements Observer {
 		btnOperationDrawing.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setOperationDrawing();
-				drawingcontroller.deSelectAll();
+				
 			}
 		});
 		
@@ -460,4 +443,19 @@ public class FrmDrawing extends JFrame implements Observer {
 	public DefaultListModel<String> getDefaultListModel(){
 		return defaultListModel;
 	}
+
+
+	public PnlDrawing getPnlDrawing() {
+		return pnlDrawing;
+	}
+
+
+	public void setPnlDrawing(PnlDrawing pnlDrawing) {
+		this.pnlDrawing = pnlDrawing;
+	}
+	
+	public void setController(DrawingController drawingController) {
+		this.drawingcontroller = drawingController;
+	}
+	
 }

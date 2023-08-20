@@ -1,29 +1,31 @@
 package drawing;
 
 import geometry.Shape;
+import mvc.DrawingModel;
+import mvc.PnlDrawing;
 
 public class MoveToFrontCommand implements Command{
 
 	private Shape shape;
-	private PnlDrawing pnlDrawing;
+	private DrawingModel drawingModel;
 	private int index;
 	
-	public MoveToFrontCommand(PnlDrawing pnlDrawing, int index) {
-		this.pnlDrawing = pnlDrawing;
+	public MoveToFrontCommand(DrawingModel drawingModel, int index) {
+		this.drawingModel = drawingModel;
 		this.index = index;
 	}
 	
 	@Override
 	public void Do() {
-		shape = pnlDrawing.getShape(index); 
-		pnlDrawing.removeOnIndex(index);
-		pnlDrawing.addShape(shape);
+		shape = drawingModel.getShape(index); 
+		drawingModel.removeOnIndex(index);
+		drawingModel.addShape(shape);
 	}
 
 	@Override
 	public void Undo() {
-		pnlDrawing.removeShape(shape);
-		pnlDrawing.insertOnIndex(index, shape);
+		drawingModel.removeShape(shape);
+		drawingModel.insertOnIndex(index, shape);
 		
 	}
 

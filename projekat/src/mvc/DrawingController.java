@@ -1,4 +1,4 @@
-package drawing;
+package mvc;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
@@ -14,6 +14,28 @@ import java.util.Observable;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import drawing.AddCommand;
+import drawing.Command;
+import drawing.DeleteCommand;
+import drawing.DlgCircle;
+import drawing.DlgDonut;
+import drawing.DlgHexagon;
+import drawing.DlgLine;
+import drawing.DlgPoint;
+import drawing.DlgRectangle;
+import drawing.MoveDownCommand;
+import drawing.MoveToBottomCommand;
+import drawing.MoveToFrontCommand;
+import drawing.MoveUpCommand;
+import drawing.ObserverMessage;
+import drawing.SelectCommand;
+import drawing.UnSelectCommand;
+import drawing.UpdateCircleCommand;
+import drawing.UpdateDonutCommand;
+import drawing.UpdateHexagonCommand;
+import drawing.UpdateLineCommand;
+import drawing.UpdatePointCommand;
+import drawing.UpdateRectangleCommand;
 import geometry.Circle;
 import geometry.Donut;
 import geometry.Hexagon;
@@ -27,18 +49,18 @@ import strategy.SaveStrategy;
 
 public class DrawingController extends Observable {
 
-	private PnlDrawing pnlDrawing;
+
 
 	private SaveStrategy saveStrategy = new SaveStrategy(null);
 	private String filePath = "";
 
-	private DrawingModel drawingModel = new DrawingModel();
+	private DrawingModel drawingModel;
 	private FrmDrawing frmDrawing;
 
 	private ArrayList<String> listLogCommand = new ArrayList<String>();
 
-	public DrawingController(PnlDrawing pnlDrawing, FrmDrawing frmDrawing) {
-		this.pnlDrawing = pnlDrawing;
+	public DrawingController(FrmDrawing frmDrawing, DrawingModel drawingModel) {
+		this.drawingModel = drawingModel;
 		this.frmDrawing = frmDrawing;
 	}
 
@@ -47,7 +69,7 @@ public class DrawingController extends Observable {
 		command.Do();
 		drawingModel.getRedoCommands().remove(drawingModel.getRedoCommands().size() - 1);
 		drawingModel.getUndoCommands().add(command);
-		pnlDrawing.repaint();
+		frmDrawing.getPnlDrawing().repaint();
 		informObservers();
 		frmDrawing.addLog("Redo");
 
@@ -58,7 +80,7 @@ public class DrawingController extends Observable {
 		command.Undo();
 		drawingModel.getUndoCommands().remove(drawingModel.getUndoCommands().size() - 1);
 		drawingModel.getRedoCommands().add(command);
-		pnlDrawing.repaint();
+		frmDrawing.getPnlDrawing().repaint();
 		informObservers();
 		frmDrawing.addLog("Undo");
 	}
@@ -69,7 +91,7 @@ public class DrawingController extends Observable {
 		dlgPoint.setColors(frmDrawing.getGlobalOutterColor());
 		dlgPoint.setVisible(true);
 		if (dlgPoint.getPoint() != null) {
-			AddCommand addCommand = new AddCommand(dlgPoint.getPoint(), pnlDrawing);
+			AddCommand addCommand = new AddCommand(dlgPoint.getPoint(), drawingModel);
 			drawingModel.getUndoCommands().add(addCommand);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			;
@@ -87,7 +109,7 @@ public class DrawingController extends Observable {
 		dlgHexagon.setColors(frmDrawing.getGlobalOutterColor(), frmDrawing.getGlobalInnerColor());
 		dlgHexagon.setVisible(true);
 		if (dlgHexagon.getHexagon() != null) {
-			AddCommand addCommand = new AddCommand(dlgHexagon.getHexagon(), pnlDrawing);
+			AddCommand addCommand = new AddCommand(dlgHexagon.getHexagon(), drawingModel);
 			drawingModel.getUndoCommands().add(addCommand);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			addCommand.Do();
@@ -108,7 +130,7 @@ public class DrawingController extends Observable {
 			dlgLine.setColors(frmDrawing.getGlobalOutterColor());
 			dlgLine.setVisible(true);
 			if (dlgLine.getLine() != null) {
-				AddCommand addCommand = new AddCommand(dlgLine.getLine(), pnlDrawing);
+				AddCommand addCommand = new AddCommand(dlgLine.getLine(), drawingModel);
 				drawingModel.getUndoCommands().add(addCommand);
 				drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 				addCommand.Do();
@@ -132,7 +154,7 @@ public class DrawingController extends Observable {
 		dlgRectangle.setVisible(true);
 
 		if (dlgRectangle.getRectangle() != null) {
-			AddCommand addCommand = new AddCommand(dlgRectangle.getRectangle(), pnlDrawing);
+			AddCommand addCommand = new AddCommand(dlgRectangle.getRectangle(), drawingModel);
 			drawingModel.getUndoCommands().add(addCommand);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			addCommand.Do();
@@ -151,7 +173,7 @@ public class DrawingController extends Observable {
 		dlgCircle.setVisible(true);
 
 		if (dlgCircle.getCircle() != null) {
-			AddCommand addCommand = new AddCommand(dlgCircle.getCircle(), pnlDrawing);
+			AddCommand addCommand = new AddCommand(dlgCircle.getCircle(), drawingModel);
 			drawingModel.getUndoCommands().add(addCommand);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			addCommand.Do();
@@ -171,7 +193,7 @@ public class DrawingController extends Observable {
 		dlgDonut.setVisible(true);
 
 		if (dlgDonut.getDonut() != null) {
-			AddCommand addCommand = new AddCommand(dlgDonut.getDonut(), pnlDrawing);
+			AddCommand addCommand = new AddCommand(dlgDonut.getDonut(), drawingModel);
 			drawingModel.getUndoCommands().add(addCommand);
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			addCommand.Do();
@@ -199,7 +221,7 @@ public class DrawingController extends Observable {
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			// pnlDrawing.setShape(index, dlgPoint.getPoint());
 
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 		}
 	}
 
@@ -218,7 +240,7 @@ public class DrawingController extends Observable {
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			// pnlDrawing.setShape(index, dlgLine.getLine());
 
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 		}
 	}
 
@@ -237,7 +259,7 @@ public class DrawingController extends Observable {
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			// pnlDrawing.setShape(index, dlgRectangle.getRectangle());
 
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 		}
 	}
 
@@ -256,7 +278,7 @@ public class DrawingController extends Observable {
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			// pnlDrawing.setShape(index, dlgDonut.getDonut());
 
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 		}
 	}
 
@@ -275,7 +297,7 @@ public class DrawingController extends Observable {
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			// pnlDrawing.setShape(index, dlgCircle.getCircle());
 
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 		}
 	}
 
@@ -294,23 +316,23 @@ public class DrawingController extends Observable {
 			drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);
 			// pnlDrawing.setShape(index, dlgHexagon.getHexagon());
 
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 		}
 
 	}
 
 	public void delete() {
-		if (pnlDrawing.isEmpty())
+		if (drawingModel.isEmpty())
 			return;
 		if (JOptionPane.showConfirmDialog(null, "Do you really want to delete selected shape?", "Confirmation",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == 0) {
-			DeleteCommand cmd = new DeleteCommand(pnlDrawing.getSelectedShapes(), pnlDrawing);
+			DeleteCommand cmd = new DeleteCommand(drawingModel.getSelectedShapes(), drawingModel);
 			cmd.Do();
 			drawingModel.getRedoCommands().clear();
 			informObservers();
 			frmDrawing.addLog(cmd.toString());
 			drawingModel.getUndoCommands().add(cmd);
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 
 		}
 	}
@@ -320,11 +342,11 @@ public class DrawingController extends Observable {
 	}
 
 	public void editShapes() {
-		int index = pnlDrawing.getSelected();
+		int index = drawingModel.getSelected();
 		if (index == -1)
 			return;
 
-		Shape shape = pnlDrawing.getShape(index);
+		Shape shape = drawingModel.getShape(index);
 
 		if (shape instanceof Point) {
 			instanceOfPoint(shape, index);
@@ -348,52 +370,52 @@ public class DrawingController extends Observable {
 	}
 
 	public void moveDown() {
-		MoveDownCommand cmd = new MoveDownCommand(pnlDrawing, pnlDrawing.getSelected());
+		MoveDownCommand cmd = new MoveDownCommand(drawingModel, drawingModel.getSelected());
 		cmd.Do();
 		drawingModel.getRedoCommands().clear();
 		informObservers();
 		frmDrawing.addLog(cmd.toString());
 		drawingModel.getUndoCommands().add(cmd);
-		pnlDrawing.repaint();
+		frmDrawing.getPnlDrawing().repaint();
 
 	}
 
 	public void moveToFront() {
-		MoveToFrontCommand cmd = new MoveToFrontCommand(pnlDrawing, pnlDrawing.getSelected());
+		MoveToFrontCommand cmd = new MoveToFrontCommand(drawingModel, drawingModel.getSelected());
 		cmd.Do();
 		drawingModel.getRedoCommands().clear();
 		informObservers();
 		frmDrawing.addLog(cmd.toString());
 		drawingModel.getUndoCommands().add(cmd);
-		pnlDrawing.repaint();
+		frmDrawing.getPnlDrawing().repaint();
 
 	}
 
 	public void moveUp() {
-		MoveUpCommand cmd = new MoveUpCommand(pnlDrawing, pnlDrawing.getSelected());
+		MoveUpCommand cmd = new MoveUpCommand(drawingModel, drawingModel.getSelected());
 		cmd.Do();
 		drawingModel.getRedoCommands().clear();
 		informObservers();
 		frmDrawing.addLog(cmd.toString());
 		drawingModel.getUndoCommands().add(cmd);
 		drawingModel.setCurrentCommand(drawingModel.getCurrentCommand() + 1);// ne treba vise svugde
-		pnlDrawing.repaint();
+		frmDrawing.getPnlDrawing().repaint();
 
 	}
 
 	public void moveToBottom() {
-		MoveToBottomCommand cmd = new MoveToBottomCommand(pnlDrawing, pnlDrawing.getSelected());
+		MoveToBottomCommand cmd = new MoveToBottomCommand(drawingModel, drawingModel.getSelected());
 		cmd.Do();
 		drawingModel.getRedoCommands().clear();
 		informObservers();
 		frmDrawing.addLog(cmd.toString());
 		drawingModel.getUndoCommands().add(cmd);
-		pnlDrawing.repaint();
+		frmDrawing.getPnlDrawing().repaint();
 
 	}
 
 	public void mouseClicked(Point mouseClick) {
-		ArrayList<Shape> shapes = pnlDrawing.getShapes();
+		ArrayList<Shape> shapes = drawingModel.getShapes();
 		Shape shapeContainingClickPoint = null;
 		for (int i = shapes.size() - 1; i >= 0; i--) {
 			if (shapes.get(i).contains(mouseClick.getX(), mouseClick.getY())) {
@@ -411,7 +433,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 
 			} else {
 				SelectCommand cmd = new SelectCommand(shapeContainingClickPoint);
@@ -420,7 +442,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 
 			}
 		} else {
@@ -429,37 +451,37 @@ public class DrawingController extends Observable {
 	}
 
 	public void deSelectAll() {
-		if (pnlDrawing.getSelectedShapes().size() > 0) {
-			UnSelectCommand cmd = new UnSelectCommand(pnlDrawing.getSelectedShapes());
+		if (drawingModel.getSelectedShapes().size() > 0) {
+			UnSelectCommand cmd = new UnSelectCommand(drawingModel.getSelectedShapes());
 			cmd.Do();
 			drawingModel.getRedoCommands().clear();
 			informObservers();
 			frmDrawing.addLog(cmd.toString());
 			drawingModel.getUndoCommands().add(cmd);
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 
 		}
 	}
 
 	public void informObservers() {
 		ObserverMessage observerMessage = new ObserverMessage();
-		observerMessage.setEnableDelete(pnlDrawing.getSelectedShapes().size() > 0);
-		observerMessage.setEnableEdit(pnlDrawing.getSelectedShapes().size() == 1);
+		observerMessage.setEnableDelete(drawingModel.getSelectedShapes().size() > 0);
+		observerMessage.setEnableEdit(drawingModel.getSelectedShapes().size() == 1);
 		observerMessage.setEnableUndo(drawingModel.getUndoCommands().size() > 0);
 		observerMessage.setEnableRedo(drawingModel.getRedoCommands().size() > 0);
-		observerMessage.setEnableMoveUp(pnlDrawing.getSelectedShapes().size() == 1
-				&& pnlDrawing.getSelected() != pnlDrawing.getShapes().size() - 1);
-		observerMessage.setEnableMoveDown(pnlDrawing.getSelectedShapes().size() == 1 && pnlDrawing.getSelected() != 0);
-		observerMessage.setEnableMoveToFront(pnlDrawing.getSelectedShapes().size() == 1
-				&& pnlDrawing.getSelected() != pnlDrawing.getShapes().size() - 1);
+		observerMessage.setEnableMoveUp(drawingModel.getSelectedShapes().size() == 1
+				&& drawingModel.getSelected() != drawingModel.getShapes().size() - 1);
+		observerMessage.setEnableMoveDown(drawingModel.getSelectedShapes().size() == 1 && drawingModel.getSelected() != 0);
+		observerMessage.setEnableMoveToFront(drawingModel.getSelectedShapes().size() == 1
+				&& drawingModel.getSelected() != drawingModel.getShapes().size() - 1);
 		observerMessage
-				.setEnableMoveToBottom(pnlDrawing.getSelectedShapes().size() == 1 && pnlDrawing.getSelected() != 0);
+				.setEnableMoveToBottom(drawingModel.getSelectedShapes().size() == 1 && drawingModel.getSelected() != 0);
 		this.setChanged();
 		this.notifyObservers(observerMessage);
 	}
 
 	public void writeSerialized() {
-		this.saveStrategy.setSaver(new SaveSerialized(pnlDrawing.getShapes()));
+		this.saveStrategy.setSaver(new SaveSerialized(drawingModel.getShapes()));
 		this.filePath = saveStrategy.saveAs();
 	}
 
@@ -479,7 +501,7 @@ public class DrawingController extends Observable {
 			try {
 				ObjectInputStream stream = new ObjectInputStream(new FileInputStream(this.filePath));
 				ArrayList<Shape> helper = (ArrayList<Shape>) stream.readObject();
-				pnlDrawing.setShapes(helper);
+				drawingModel.setShapes(helper);
 				frmDrawing.repaint();
 				drawingModel.getUndoCommands().clear();
 				drawingModel.getRedoCommands().clear();
@@ -509,6 +531,10 @@ public class DrawingController extends Observable {
 				while ((line = bufferedReader.readLine()) != null) {
 					listLogCommand.add(line);
 				}
+				drawingModel.empty();
+				frmDrawing.getPnlDrawing().repaint();
+				frmDrawing.getDefaultListModel().clear();
+				informObservers();
 
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
@@ -528,7 +554,7 @@ public class DrawingController extends Observable {
 			command.Undo();
 			drawingModel.getUndoCommands().remove(drawingModel.getUndoCommands().size() - 1);
 			drawingModel.getRedoCommands().add(command);
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 			frmDrawing.addLog("Undo");
 			informObservers();
 			listLogCommand.remove(0);
@@ -539,7 +565,7 @@ public class DrawingController extends Observable {
 			command.Do();
 			drawingModel.getRedoCommands().remove(drawingModel.getRedoCommands().size() - 1);
 			drawingModel.getUndoCommands().add(command);
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 			frmDrawing.addLog("Redo");
 			informObservers();
 			listLogCommand.remove(0);
@@ -579,12 +605,12 @@ public class DrawingController extends Observable {
 				boolean select = Boolean.parseBoolean(selectShape[1]);
 
 				Rectangle rectangle = new Rectangle(new Point(x, y), width, height, select, color, innerColor);
-				AddCommand cmd = new AddCommand(rectangle, pnlDrawing);
+				AddCommand cmd = new AddCommand(rectangle, drawingModel);
 				cmd.Do();
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 
 			} else if (shapeName.equals("Circle")) {
 
@@ -613,12 +639,12 @@ public class DrawingController extends Observable {
 				Color innerColor = new Color(Integer.parseInt(innerColorShape[1]));
 
 				Circle circle = new Circle(new Point(x, y), radius, select, color, innerColor);
-				AddCommand cmd = new AddCommand(circle, pnlDrawing);
+				AddCommand cmd = new AddCommand(circle, drawingModel);
 				cmd.Do();
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 
 			} else if (shapeName.equals("Donut")) {
 
@@ -651,12 +677,12 @@ public class DrawingController extends Observable {
 				Color innerColor = new Color(Integer.parseInt(innerColorShape[1]));
 
 				Donut donut = new Donut(new Point(x, y), radius, innerRadius, select, color, innerColor);
-				AddCommand cmd = new AddCommand(donut, pnlDrawing);
+				AddCommand cmd = new AddCommand(donut, drawingModel);
 				cmd.Do();
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 
 			} else if (shapeName.equals("Hexagon")) {
 
@@ -685,12 +711,12 @@ public class DrawingController extends Observable {
 				Color innerColor = new Color(Integer.parseInt(innerColorShape[1]));
 
 				Hexagon hexagon = new Hexagon(new Point(x, y), radius, select, color, innerColor);
-				AddCommand cmd = new AddCommand(hexagon, pnlDrawing);
+				AddCommand cmd = new AddCommand(hexagon, drawingModel);
 				cmd.Do();
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 
 			} else if (shapeName.equals("Line")) {
 
@@ -719,12 +745,12 @@ public class DrawingController extends Observable {
 				Color color = new Color(Integer.parseInt(colorShape[1]));
 
 				Line line = new Line(new Point(startX, startY), new Point(endX, endY), select, color);
-				AddCommand cmd = new AddCommand(line, pnlDrawing);
+				AddCommand cmd = new AddCommand(line, drawingModel);
 				cmd.Do();
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 
 			} else if (shapeName.equals("Point")) {
 
@@ -745,12 +771,12 @@ public class DrawingController extends Observable {
 				Color color = new Color(Integer.parseInt(colorShape[1]));
 
 				Point point = new Point(x, y, select, color);
-				AddCommand cmd = new AddCommand(point, pnlDrawing);
+				AddCommand cmd = new AddCommand(point, drawingModel);
 				cmd.Do();
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 			}
 
 		} else if (commandName.equals("Update")) {
@@ -792,7 +818,7 @@ public class DrawingController extends Observable {
 				Point point2 = new Point(x2, y2, select2, color2);
 
 				Point placeholder = null;
-				for (Shape shape : pnlDrawing.getShapes()) {
+				for (Shape shape : drawingModel.getShapes()) {
 					if (shape instanceof Point && ((Point) shape).equals(point)) {
 						placeholder = (Point) shape;
 					}
@@ -802,7 +828,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 			} else if (shapeName.equals("Rectangle")) {
 				String xPart = logParts[2];
 				String[] xCoordinate = xPart.split(":");
@@ -865,7 +891,7 @@ public class DrawingController extends Observable {
 
 				Rectangle placeholder = null;
 
-				for (Shape shape : pnlDrawing.getShapes()) {
+				for (Shape shape : drawingModel.getShapes()) {
 					if (shape instanceof Rectangle && ((Rectangle) shape).equals(rectangle)) {
 						placeholder = (Rectangle) shape;
 					}
@@ -875,7 +901,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 
 			} else if (shapeName.equals("Line")) {
 
@@ -932,7 +958,7 @@ public class DrawingController extends Observable {
 
 				Line placeholder = null;
 
-				for (Shape shape : pnlDrawing.getShapes()) {
+				for (Shape shape : drawingModel.getShapes()) {
 					if (shape instanceof Line && ((Line) shape).equals(line)) {
 						placeholder = (Line) shape;
 					}
@@ -942,7 +968,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 			} else if (shapeName.equals("Circle")) {
 
 				String xPart = logParts[2];
@@ -998,7 +1024,7 @@ public class DrawingController extends Observable {
 
 				Circle placeholder = null;
 
-				for (Shape shape : pnlDrawing.getShapes()) {
+				for (Shape shape : drawingModel.getShapes()) {
 					if (shape instanceof Circle && ((Circle) shape).equals(circle)) {
 						placeholder = (Circle) shape;
 					}
@@ -1008,7 +1034,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 			} else if (shapeName.equals("Hexagon")) {
 
 				String xPart = logParts[2];
@@ -1064,7 +1090,7 @@ public class DrawingController extends Observable {
 
 				Hexagon placeholder = null;
 
-				for (Shape shape : pnlDrawing.getShapes()) {
+				for (Shape shape : drawingModel.getShapes()) {
 					if (shape instanceof Hexagon && ((Hexagon) shape).equals(hexagon)) {
 						placeholder = (Hexagon) shape;
 					}
@@ -1074,7 +1100,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 			} else if (shapeName.equals("Donut")) {
 
 				String xPart = logParts[2];
@@ -1138,7 +1164,7 @@ public class DrawingController extends Observable {
 
 				Donut placeholder = null;
 
-				for (Shape shape : pnlDrawing.getShapes()) {
+				for (Shape shape : drawingModel.getShapes()) {
 					if (shape instanceof Hexagon && ((Donut) shape).equals(donut)) {
 						placeholder = (Donut) shape;
 					}
@@ -1148,41 +1174,41 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 			}
 
 		} else if (commandName.equals("MoveUp")) {
 			int index = Integer.parseInt(logParts[1]);
-			MoveUpCommand cmd = new MoveUpCommand(pnlDrawing, index);
+			MoveUpCommand cmd = new MoveUpCommand(drawingModel, index);
 			cmd.Do();
 			informObservers();
 			frmDrawing.addLog(cmd.toString());
 			drawingModel.getUndoCommands().add(cmd);
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 		} else if (commandName.equals("MoveToFront")) {
 			int index = Integer.parseInt(logParts[1]);
-			MoveToFrontCommand cmd = new MoveToFrontCommand(pnlDrawing, index);
+			MoveToFrontCommand cmd = new MoveToFrontCommand(drawingModel, index);
 			cmd.Do();
 			informObservers();
 			frmDrawing.addLog(cmd.toString());
 			drawingModel.getUndoCommands().add(cmd);
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 		} else if (commandName.equals("MoveDown")) {
 			int index = Integer.parseInt(logParts[1]);
-			MoveDownCommand cmd = new MoveDownCommand(pnlDrawing, index);
+			MoveDownCommand cmd = new MoveDownCommand(drawingModel, index);
 			cmd.Do();
 			informObservers();
 			frmDrawing.addLog(cmd.toString());
 			drawingModel.getUndoCommands().add(cmd);
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 		} else if (commandName.equals("MoveToBottom")) {
 			int index = Integer.parseInt(logParts[1]);
-			MoveToBottomCommand cmd = new MoveToBottomCommand(pnlDrawing, index);
+			MoveToBottomCommand cmd = new MoveToBottomCommand(drawingModel, index);
 			cmd.Do();
 			informObservers();
 			frmDrawing.addLog(cmd.toString());
 			drawingModel.getUndoCommands().add(cmd);
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 		} else if (commandName.equals("Select")) {
 			String shapeName = logParts[1];
 			if (shapeName.equals("Rectangle")) {
@@ -1217,7 +1243,7 @@ public class DrawingController extends Observable {
 				Rectangle rectangle = new Rectangle(new Point(x, y), width, height, select, color, innerColor);
 
 				Rectangle placeholder = null;
-				for (Shape shape : pnlDrawing.getShapes()) {
+				for (Shape shape : drawingModel.getShapes()) {
 					if (shape instanceof Rectangle && ((Rectangle) shape).equals(rectangle)) {
 						placeholder = (Rectangle) shape;
 					}
@@ -1227,7 +1253,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 
 			} else if (shapeName.equals("Circle")) {
 				String xPart = logParts[2];
@@ -1257,7 +1283,7 @@ public class DrawingController extends Observable {
 				Circle circle = new Circle(new Point(x, y), radius, select, color, innerColor);
 
 				Circle placeholder = null;
-				for (Shape shape : pnlDrawing.getShapes()) {
+				for (Shape shape : drawingModel.getShapes()) {
 					if (shape instanceof Circle && ((Circle) shape).equals(circle)) {
 						placeholder = (Circle) shape;
 					}
@@ -1267,7 +1293,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 			} else if (shapeName.equals("Point")) {
 
 				String xPart = logParts[2];
@@ -1289,7 +1315,7 @@ public class DrawingController extends Observable {
 				Point point = new Point(x, y, select, color);
 
 				Point placeholder = null;
-				for (Shape shape : pnlDrawing.getShapes()) {
+				for (Shape shape : drawingModel.getShapes()) {
 					if (shape instanceof Point && ((Point) shape).equals(point)) {
 						placeholder = (Point) shape;
 					}
@@ -1299,7 +1325,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 			} else if (shapeName.equals("Line")) {
 				String xStartPart = logParts[2];
 				String[] xCoordinate = xStartPart.split(":");
@@ -1328,7 +1354,7 @@ public class DrawingController extends Observable {
 				Line line = new Line(new Point(startX, startY), new Point(endX, endY), select, color);
 
 				Line placeholder = null;
-				for (Shape shape : pnlDrawing.getShapes()) {
+				for (Shape shape : drawingModel.getShapes()) {
 					if (shape instanceof Line && ((Line) shape).equals(line)) {
 						placeholder = (Line) shape;
 					}
@@ -1338,7 +1364,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 			} else if (shapeName.equals("Hexagon")) {
 				String xPart = logParts[2];
 				String[] xCoordinate = xPart.split(":");
@@ -1367,7 +1393,7 @@ public class DrawingController extends Observable {
 				Hexagon hexagon = new Hexagon(new Point(x, y), radius, select, color, innerColor);
 
 				Hexagon placeholder = null;
-				for (Shape shape : pnlDrawing.getShapes()) {
+				for (Shape shape : drawingModel.getShapes()) {
 					if (shape instanceof Hexagon && ((Hexagon) shape).equals(hexagon)) {
 						placeholder = (Hexagon) shape;
 					}
@@ -1377,7 +1403,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 			} else if (shapeName.equals("Donut")) {
 				String xPart = logParts[2];
 				String[] xCoordinate = xPart.split(":");
@@ -1410,7 +1436,7 @@ public class DrawingController extends Observable {
 				Donut donut = new Donut(new Point(x, y), radius, innerRadius, select, color, innerColor);
 
 				Donut placeholder = null;
-				for (Shape shape : pnlDrawing.getShapes()) {
+				for (Shape shape : drawingModel.getShapes()) {
 					if (shape instanceof Donut && ((Donut) shape).equals(donut)) {
 						placeholder = (Donut) shape;
 					}
@@ -1420,7 +1446,7 @@ public class DrawingController extends Observable {
 				informObservers();
 				frmDrawing.addLog(cmd.toString());
 				drawingModel.getUndoCommands().add(cmd);
-				pnlDrawing.repaint();
+				frmDrawing.getPnlDrawing().repaint();
 			}
 		} else if (commandName.equals("UnSelect")) {
 			String[] parts = log.split("#");
@@ -1451,7 +1477,7 @@ public class DrawingController extends Observable {
 
 					Point point = new Point(x, y, select, color);
 					Point placeholder = null;
-					for (Shape shape : pnlDrawing.getShapes()) {
+					for (Shape shape : drawingModel.getShapes()) {
 						if (shape instanceof Point && ((Point) shape).equals(point)) {
 							placeholder = (Point) shape;
 						}
@@ -1491,7 +1517,7 @@ public class DrawingController extends Observable {
 					Rectangle rectangle = new Rectangle(new Point(x, y), width, height, select, color, innerColor);
 					
 					Rectangle placeholder = null;
-					for (Shape shape : pnlDrawing.getShapes()) {
+					for (Shape shape : drawingModel.getShapes()) {
 						if (shape instanceof Rectangle && ((Rectangle) shape).equals(rectangle)) {
 							placeholder = (Rectangle) shape;
 						}
@@ -1528,7 +1554,7 @@ public class DrawingController extends Observable {
 					Circle circle = new Circle(new Point(x, y), radius, select, color, innerColor);
 					
 					Circle placeholder = null;
-					for (Shape shape : pnlDrawing.getShapes()) {
+					for (Shape shape : drawingModel.getShapes()) {
 						if (shape instanceof Circle && ((Circle) shape).equals(circle)) {
 							placeholder = (Circle) shape;
 						}
@@ -1568,7 +1594,7 @@ public class DrawingController extends Observable {
 					Donut donut = new Donut(new Point(x, y), radius, innerRadius, select, color, innerColor);
 					
 					Donut placeholder = null;
-					for (Shape shape : pnlDrawing.getShapes()) {
+					for (Shape shape : drawingModel.getShapes()) {
 						if (shape instanceof Donut && ((Donut) shape).equals(donut)) {
 							placeholder = (Donut) shape;
 						}
@@ -1603,7 +1629,7 @@ public class DrawingController extends Observable {
 					Hexagon hexagon = new Hexagon(new Point(x, y), radius, select, color, innerColor);
 					
 					Hexagon placeholder = null;
-					for (Shape shape : pnlDrawing.getShapes()) {
+					for (Shape shape : drawingModel.getShapes()) {
 						if (shape instanceof Hexagon && ((Hexagon) shape).equals(hexagon)) {
 							placeholder = (Hexagon) shape;
 						}
@@ -1638,7 +1664,7 @@ public class DrawingController extends Observable {
 
 					Line line = new Line(new Point(startX, startY), new Point(endX, endY), select, color);
 					Line placeholder = null;
-					for (Shape shape : pnlDrawing.getShapes()) {
+					for (Shape shape : drawingModel.getShapes()) {
 						if (shape instanceof Line && ((Line) shape).equals(line)) {
 							placeholder = (Line) shape;
 						}
@@ -1652,15 +1678,15 @@ public class DrawingController extends Observable {
 			informObservers();
 			frmDrawing.addLog(cmd.toString());
 			drawingModel.getUndoCommands().add(cmd);
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 			
 		} else if (commandName.equals("Delete")) {
-			DeleteCommand cmd = new DeleteCommand(pnlDrawing.getSelectedShapes(), pnlDrawing);
+			DeleteCommand cmd = new DeleteCommand(drawingModel.getSelectedShapes(), drawingModel);
 			cmd.Do();
 			informObservers();
 			frmDrawing.addLog(cmd.toString());
 			drawingModel.getUndoCommands().add(cmd);
-			pnlDrawing.repaint();
+			frmDrawing.getPnlDrawing().repaint();
 		}
 		listLogCommand.remove(0);
 	}

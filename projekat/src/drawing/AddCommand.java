@@ -3,15 +3,17 @@ package drawing;
 import java.util.ArrayList;
 
 import geometry.Shape;
+import mvc.DrawingModel;
+import mvc.PnlDrawing;
 
 public class AddCommand implements Command {
 
 	
 	private Shape shape;
-	private PnlDrawing shapes;
+	private DrawingModel shapes;
 	
 	
-	public AddCommand(Shape shape, PnlDrawing shapes) {
+	public AddCommand(Shape shape, DrawingModel shapes) {
 		this.shape = shape;
 		this.shapes = shapes;
 	}

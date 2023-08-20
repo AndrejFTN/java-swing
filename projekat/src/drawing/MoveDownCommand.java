@@ -1,25 +1,28 @@
 package drawing;
 
+import mvc.DrawingModel;
+import mvc.PnlDrawing;
+
 public class MoveDownCommand implements Command {
 	
-	private PnlDrawing pnlDrawing;
+	private DrawingModel drawingModel;
 	private int index;
 	
-	public MoveDownCommand(PnlDrawing pnlDrawing, int index) {
-		this.pnlDrawing = pnlDrawing;
+	public MoveDownCommand(DrawingModel drawingModel, int index) {
+		this.drawingModel = drawingModel;
 		this.index = index;
 	}
 	
 	
 	@Override
 	public void Do() {
-		pnlDrawing.swapShapes(index, index - 1); 
+		drawingModel.swapShapes(index, index - 1); 
 		
 	}
 
 	@Override
 	public void Undo() {
-		pnlDrawing.swapShapes(index, index - 1); 
+		drawingModel.swapShapes(index, index - 1); 
 	}
 
 
