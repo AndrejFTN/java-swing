@@ -5,8 +5,7 @@ import geometry.Point;
 
 public class UpdateLineCommand implements Command {
 	
-	//uraditi clone u line klasi, odraditi do i undo i u kontroleru zavrsiti
-	// i proveriti da li treba sve tacek ovako
+
 
 	Line newLine, oldLine, originalLine;
 	

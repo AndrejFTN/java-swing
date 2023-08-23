@@ -14,7 +14,7 @@ public class PnlDrawing extends JPanel {
 	
 	
 	
-	private DrawingModel drawingModel = null;
+	private DrawingModel drawingModel;
 	/**
 	 * Create the panel.
 	 */

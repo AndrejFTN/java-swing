@@ -99,6 +99,9 @@ public class FrmDrawing extends JFrame implements Observer {
 	private final JMenuItem mntmSave = new JMenuItem("Save");
 	private final JButton btnLoadLog = new JButton("Load");
 	
+	public void setController(DrawingController drawingController) {
+		this.drawingcontroller = drawingController;
+	}
 	
 	public FrmDrawing() {
 		setTitle("Drawing");
@@ -454,8 +457,6 @@ public class FrmDrawing extends JFrame implements Observer {
 		this.pnlDrawing = pnlDrawing;
 	}
 	
-	public void setController(DrawingController drawingController) {
-		this.drawingcontroller = drawingController;
-	}
+
 	
 }
